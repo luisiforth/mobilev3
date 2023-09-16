@@ -1,0 +1,11 @@
+{
+  "trailingComma": "none",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "files.eol": "\n",
+  "editor.formatOnSave": false
+}
