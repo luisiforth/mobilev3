@@ -1,5 +1,10 @@
 import { useRef, useCallback, useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 import { COLORS, radius, spaces } from '@/constants';
 import { Feather } from '@expo/vector-icons';
@@ -8,9 +13,9 @@ import styled from 'styled-components/native';
 type SearchProps = {
   placeholder: string;
   onChangeText?: (text: string) => void;
-};
+} & TouchableOpacityProps;
 
-export default function Search({ placeholder }: SearchProps) {
+export default function Search({ placeholder, ...props }: SearchProps) {
   const inputRef = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,6 +35,7 @@ export default function Search({ placeholder }: SearchProps) {
       activeOpacity={0.8}
       onPress={handleSelectedInput}
       style={containerStyle}
+      {...props}
     >
       <TextInput
         ref={inputRef}

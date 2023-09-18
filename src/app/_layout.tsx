@@ -1,6 +1,7 @@
 import { TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+import { ModalProvider } from '@/hooks/modalOpenContext';
 import { Slot } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import styled, { ThemeProvider } from 'styled-components/native';
@@ -16,7 +17,9 @@ export default function GlobalLayout() {
         <StatusBar style="light" translucent />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View>
-            <Slot />
+            <ModalProvider>
+              <Slot />
+            </ModalProvider>
           </View>
         </TouchableWithoutFeedback>
       </ThemeProvider>

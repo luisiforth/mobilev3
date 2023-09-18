@@ -32,7 +32,10 @@ export default function HomeLayout() {
           ),
         }}
       />
-      {/* <Drawer.Screen name="teste/index" /> */}
+      <Drawer.Screen
+        options={{ drawerItemStyle: { display: 'none' } }}
+        name="advanced-piece"
+      />
       <Drawer.Screen
         name="teste/index"
         options={{

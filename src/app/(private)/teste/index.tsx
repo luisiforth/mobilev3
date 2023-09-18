@@ -1,16 +1,11 @@
 import { View, StyleSheet } from 'react-native';
 
-import { CardModules } from '@/components/CardModules';
 import { Header } from '@/components/Header';
 import Search from '@/components/Search';
 import { fontSizes } from '@/constants';
-import { useNavigation } from 'expo-router';
-
-// import { COLORS } from '@/constants';
+import { VictoryPie } from 'victory-native';
 
 export default function Home() {
-  const router = useNavigation();
-  console.log({ router });
   return (
     <View style={styles.container}>
       <Header.Wrapper>
@@ -18,14 +13,11 @@ export default function Home() {
           <Header.Text text="Olá" />
           <Header.Title title="TESTE (Não Inativar)" />
         </View>
-        <Header.Image />
       </Header.Wrapper>
       <Search placeholder="Buscar ..." />
 
-      <View>
-        <CardModules.Wrapper>
-          <CardModules.Title title="Teste" />
-        </CardModules.Wrapper>
+      <View style={{ alignItems: 'center' }}>
+        <VictoryPie data={[20, 30, 40]} />
       </View>
     </View>
   );
