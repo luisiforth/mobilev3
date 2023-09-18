@@ -12,6 +12,14 @@ import { useModalContext, CustomModal } from '@/hooks/modalOpenContext';
 export default function Home() {
   const { toggleModal } = useModalContext();
 
+  const testRoutes = [
+    {
+      name: 'Peça Adiantada',
+      icon: 'camera',
+      href: '/advanced-piece/',
+    },
+  ];
+
   return (
     <View style={styles.container}>
       <Header.Wrapper>
@@ -34,12 +42,12 @@ export default function Home() {
         </TextInput.Wrapper>
         <Card.Container>
           <CardModules.Wrap>
-            <CardModules.Wrapper>
+            <CardModules.Wrapper href={'/advanced-piece/'}>
               <CardModules.Icon icon="camera" />
               <CardModules.Title title="Peça Adiantada" />
             </CardModules.Wrapper>
 
-            <CardModules.Wrapper>
+            <CardModules.Wrapper href={'/'}>
               <CardModules.Icon icon="alert-circle" />
               <CardModules.Title title="Teste" />
             </CardModules.Wrapper>
