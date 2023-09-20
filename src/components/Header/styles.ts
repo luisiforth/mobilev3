@@ -6,6 +6,12 @@ import styled from 'styled-components/native';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);
 
 const Wrapper = styled.View`
+  gap: 20px;
+  /* flex-direction: row; */
+  /* justify-content: space-between; */
+`;
+
+const YStack = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -44,10 +50,11 @@ const Title = styled.Text`
 `;
 
 export const Root = {
+  Image: Image,
   SkeletonAvatar: ShimmerPlaceholderStyleAvatar,
   SkeletonText: ShimmerPlaceholderStyleText,
-  Wrapper: Wrapper,
-  Image: Image,
   Text: Text,
   Title: Title,
+  Wrapper: Wrapper,
+  YStack: YStack,
 };

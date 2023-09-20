@@ -11,25 +11,41 @@ type Props = {
   name: string;
   placeholder?: string;
   item: {
-    label: string;
+    label: string | number;
     value: string | number;
   }[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChanged?: (val: any) => void;
 } & InputProps;
 
-export function ControlledSelect({ control, name, item, placeholder }: Props) {
+export function ControlledSelect({
+  control,
+  name,
+  item,
+  placeholder,
+  onValueChanged,
+}: Props) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value } }) => (
-        <Picker selectedValue={value} onValueChange={onChange}>
+        <Picker
+          selectedValue={value}
+          onValueChange={(val) => {
+            onChange(val);
+            if (onValueChanged) {
+              onValueChanged(val);
+            }
+          }}
+        >
           <Picker.Item
             label={placeholder || 'Selecione'}
             value={null}
             enabled={true}
           />
           {item.map((v, key) => (
-            <Picker.Item key={key} label={v.label} value={v.value} />
+            <Picker.Item key={key} label={v.label as string} value={v.value} />
           ))}
         </Picker>
       )}

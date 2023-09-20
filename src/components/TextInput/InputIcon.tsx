@@ -17,7 +17,7 @@ export default function InputIcon({
 }: InputProps) {
   return (
     <S.Root.Icon disabled={disableTouch} {...props}>
-      <Feather name={icon} size={25} color={theme.colors.white[500]} />
+      <Feather name={icon} size={25} color={theme.colors.black} />
     </S.Root.Icon>
   );
 }

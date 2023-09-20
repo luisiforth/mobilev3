@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState } from 'react';
-import { View } from 'react-native';
-import Modal from 'react-native-modal/dist/modal';
 
 interface ModalContextType {
   isModalOpen: boolean;
@@ -45,24 +43,3 @@ export const ModalProvider: React.FC<ModalProviderProps> = ({ children }) => {
     </ModalContext.Provider>
   );
 };
-
-// Componente do modal
-export function CustomModal({ children }: { children: React.ReactNode }) {
-  const { isModalOpen, toggleModal } = useModalContext();
-
-  return (
-    <Modal
-      isVisible={isModalOpen}
-      onSwipeComplete={toggleModal}
-      backdropColor="#2E2F42"
-      backdropOpacity={0.8}
-      swipeDirection={['down']}
-      style={{
-        justifyContent: 'flex-end',
-        margin: 0,
-      }}
-    >
-      {children}
-    </Modal>
-  );
-}

@@ -62,12 +62,7 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView enabled>
-        <S.Root.Wrapper
-          style={{
-            shadowColor: 'black',
-            shadowOpacity: 0.9,
-          }}
-        >
+        <S.Root.Wrapper>
           <ProgressBar total={steps.length} current={currentStep} />
           {componentElement[currentStep - 1]}
           {currentStep > 1 && <Button text="Voltar" onPress={handleBack} />}

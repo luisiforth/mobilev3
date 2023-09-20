@@ -1,15 +1,16 @@
+import React from 'react';
+
 import { CardModulesProps } from './types/card-type';
 
 import * as S from './styles';
 
-type CardModulesWrapperProps = Pick<CardModulesProps, 'children' | 'data'>;
+type CardModulesWrapperProps = Pick<CardModulesProps, 'children'>;
 
 export function CardModulesWrap({ children }: CardModulesWrapperProps) {
-  if (data) return <S.Root.Wrap>{children}</S.Root.Wrap>;
+  return <S.Root.Wrap>{children}</S.Root.Wrap>;
 }
 
-{
-  /* <S.Root.Wrap>
+/* <S.Root.Wrap>
 {data.map((item, index) => (
   <div key={index}>
     {React.cloneElement(children, {
@@ -20,4 +21,3 @@ export function CardModulesWrap({ children }: CardModulesWrapperProps) {
   </div>
 ))}
 </S.Root.Wrap> */
-}
