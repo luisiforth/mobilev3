@@ -1,14 +1,15 @@
-// import { EXPO_PUBLIC_API_URL } from '@env';
 import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
 export const api = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
 });
 
-// getDataStorage({ key: '@iforth_login' }).then((result) => {
-//   console.log(result);
-//   if (result) {
-//     const token = JSON.parse(result)?.token;
-//     return (api.defaults.headers['Authorization'] = `Bearer ${token}`);
-//   }
-// });
+api.interceptors.request.use(async (config) => {
+  const token = await SecureStore.getItemAsync('iforthToken');
+
+  if (token != '') {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});

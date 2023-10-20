@@ -1,11 +1,9 @@
-import { Text } from 'react-native';
-
 import { CardProps } from './types/card-type';
 
-import { style } from './styles';
+import * as S from './styles';
 
 type CardTitleProps = Pick<CardProps, 'title'>;
 
 export function CardTitle({ title }: CardTitleProps) {
-  return <Text style={style.title}>{title}</Text>;
+  return <S.Root.Text>{title}</S.Root.Text>;
 }

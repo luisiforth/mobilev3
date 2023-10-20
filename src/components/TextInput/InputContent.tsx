@@ -19,10 +19,10 @@ export default function InputContent({ value, ...props }: InputProps) {
     setOnFocus(false);
     setOnBlur(!!onBlur);
   }
-
   return (
     <S.Root.Input
       value={value}
+      focusable={onFocus}
       onFocus={handleInputFocus}
       onBlur={handleInputBlur}
       {...props}

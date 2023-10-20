@@ -27,8 +27,9 @@ export default {
       /**
        * PRIMARY IS Blue our Purple
        */
+
       button: 'rgb(110, 115, 249)',
-      ring: 'rgba(134, 173, 226, 1)',
+      ring: '#2563eb',
       100: '#7474B7',
       200: '#62629F',
       300: '#505086',
@@ -39,7 +40,7 @@ export default {
       button: 'rgb(227, 62, 62)',
       300: '#E57373',
       400: '#EF5350',
-      500: '#F44336 ',
+      500: '#F44336',
       600: '#FF2D2D',
       '600/50': 'rgba(255, 45, 45, 0.5)',
     },
@@ -50,6 +51,9 @@ export default {
       'success-green-400': '#5FC936',
       'warning-400': '#FD8000',
       'error-400': '#FF2D2D',
+    },
+    blue: {
+      button: '#6E73F9',
     },
     white: {
       500: '#FFFFFF',
@@ -62,8 +66,10 @@ export default {
     },
     orange: {
       button: 'rgb(255, 154, 62)',
-      500: '#E6a457',
+      500: '#FF7700',
+      '500/50': 'rgba(255, 119, 0, 0.4)',
     },
+    background: '#e5e5f0',
   },
   font: {
     bold: '700',

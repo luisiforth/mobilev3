@@ -7,6 +7,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import * as S from './styles';
+import { useTheme } from 'styled-components/native';
 
 interface Props {
   total: number;
@@ -15,7 +16,7 @@ interface Props {
 
 export function ProgressBar({ total, current }: Props) {
   const percentage = Math.round((current / total) * 90);
-
+  const theme = useTheme();
   const sharedProgress = useSharedValue(percentage);
 
   useEffect(() => {
@@ -28,6 +29,14 @@ export function ProgressBar({ total, current }: Props) {
     };
   });
 
+  const styles = StyleSheet.create({
+    progress: {
+      backgroundColor: theme.colors.primary[200],
+      borderRadius: 8,
+      height: 5,
+    },
+  });
+
   return (
     <S.Root.Wrapper>
       <Animated.View style={[styles.progress, styledAnimated]} />
@@ -37,11 +46,3 @@ export function ProgressBar({ total, current }: Props) {
     </S.Root.Wrapper>
   );
 }
-
-export const styles = StyleSheet.create({
-  progress: {
-    height: 8,
-    backgroundColor: 'black',
-    borderRadius: 8,
-  },
-});

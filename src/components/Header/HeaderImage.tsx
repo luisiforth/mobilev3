@@ -12,11 +12,13 @@ export function HeaderImage({ src = undefined }: HeaderImageProps) {
         visible={!!src}
         location={[0.4, 0.8, 1]}
       >
-        <S.Root.Image
-          source={{
-            uri: src,
-          }}
-        />
+        <S.Root.BorderImage>
+          <S.Root.Image
+            source={{
+              uri: src,
+            }}
+          />
+        </S.Root.BorderImage>
       </S.Root.SkeletonAvatar>
     </>
   );

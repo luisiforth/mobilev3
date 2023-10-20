@@ -1,9 +1,9 @@
 import React from 'react';
 import { Controller, Control } from 'react-hook-form';
 
-import { Picker } from '@react-native-picker/picker';
+import { Picker, PickerProps } from '@react-native-picker/picker';
 
-import { InputProps } from '../TextInput/InputContent';
+import { ItemValue } from '@react-native-picker/picker/typings/Picker';
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,7 +16,7 @@ type Props = {
   }[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onValueChanged?: (val: any) => void;
-} & InputProps;
+} & PickerProps<ItemValue>;
 
 export function ControlledSelect({
   control,
@@ -31,11 +31,12 @@ export function ControlledSelect({
       control={control}
       render={({ field: { onChange, value } }) => (
         <Picker
-          selectedValue={value}
+          selectedValue={value == undefined ? value : value.value}
           onValueChange={(val) => {
-            onChange(val);
+            const retorno = item.find((v) => val === v.value);
+            onChange(retorno);
             if (onValueChanged) {
-              onValueChanged(val);
+              onValueChanged(retorno);
             }
           }}
         >

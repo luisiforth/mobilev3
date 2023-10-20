@@ -1,14 +1,20 @@
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacityProps } from 'react-native';
 
 import styled from 'styled-components/native';
 
-export type ButtonTypeStyleProps = 'PRIMARY' | 'SECONDARY';
-export type StyledProps = {
-  type: ButtonTypeStyleProps;
-};
-const Wrapper = styled(TouchableOpacity)<StyledProps>`
+export type WrapperProps = {
+  color: string;
+} & TouchableOpacityProps;
+
+const Wrapper = styled.TouchableOpacity<WrapperProps>`
   border-radius: 6px;
-  background-color: blue;
+  background-color: ${({ color, theme }) =>
+    color ? color : theme.colors.primary[300]};
+  opacity: ${({ disabled }) => (disabled ? 0.7 : 1)};
+`;
+
+const Spinner = styled.ActivityIndicator`
+  padding: 12px;
 `;
 
 const Text = styled.Text`
@@ -18,6 +24,7 @@ const Text = styled.Text`
 `;
 
 export const Root = {
-  Wrapper: Wrapper,
+  Spinner: Spinner,
   Text: Text,
+  Wrapper: Wrapper,
 };

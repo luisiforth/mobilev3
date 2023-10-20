@@ -1,38 +1,34 @@
-import { StyleSheet } from 'react-native';
+import styled from 'styled-components/native';
 
-import { COLORS, fontSizes, radius, spaces } from '@/constants';
+const Container = styled.View`
+  /* flex: 1; */
+  gap: ${({ theme }) => theme.spacings[6]};
+`;
 
-export const style = StyleSheet.create({
-  container: {
-    // marginTop: 10,
-  },
+const Description = styled.Text`
+  color: ${({ theme }) => theme.colors.black};
+  font-size: ${({ theme }) => theme.font.sizes.md};
+  font-weight: ${({ theme }) => theme.font.regular};
+`;
 
-  description: {
-    color: COLORS.black,
-    fontSize: fontSizes.md,
-    fontWeight: '400',
-  },
+const Header = styled.View`
+  gap: ${({ theme }) => theme.spacings[6]};
+`;
 
-  header: {
-    gap: spaces[5],
-  },
+const Text = styled.Text`
+  color: ${({ theme }) => theme.colors.black};
+  font-size: ${({ theme }) => theme.font.sizes.lg};
+  font-weight: ${({ theme }) => theme.font.bold};
+`;
 
-  image: {
-    backgroundColor: COLORS.gray[400],
-    borderRadius: radius.full,
-    height: 55,
-    justifyContent: 'space-around',
-    width: 55,
-  },
+const Wrapper = styled.View`
+  gap: ${({ theme }) => theme.spacings[10]};
+`;
 
-  title: {
-    color: COLORS.black,
-    fontSize: fontSizes.lg,
-    fontWeight: '700',
-  },
-
-  wrapper: {
-    gap: spaces[10],
-    // padding: spaces[5],
-  },
-});
+export const Root = {
+  Container: Container,
+  Description: Description,
+  Header: Header,
+  Text: Text,
+  Wrapper: Wrapper,
+};

@@ -1,51 +1,53 @@
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
 import CustomDrawer from '@/components/CustomDrawer';
-import { COLORS } from '@/constants';
 import { Feather } from '@expo/vector-icons';
 import { Drawer } from 'expo-router/drawer';
-
-import theme from '@/styles/theme';
+import { useTheme } from 'styled-components/native';
 
 export default function HomeLayout() {
-  const insets = useSafeAreaInsets();
-
+  const theme = useTheme();
   return (
     <Drawer
       drawerContent={CustomDrawer}
-      initialRouteName="home/index"
+      initialRouteName="index"
       screenOptions={{
         drawerActiveTintColor: theme.colors.black,
+        freezeOnBlur: true,
         headerShown: false,
         sceneContainerStyle: {
-          backgroundColor: COLORS.white,
-          paddingTop: insets.top,
+          backgroundColor: theme.colors.gray[200],
         },
       }}
     >
       <Drawer.Screen
-        name="modules/index"
+        name="modules"
         options={{
-          title: 'Modulos',
           drawerIcon: ({ color, size }) => (
             <Feather name="airplay" color={color} size={size} />
           ),
+          title: 'Modulos',
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
-        options={{ drawerItemStyle: { display: 'none' } }}
-        name="advanced-piece"
+        options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
+        name="(pieces)"
       />
       <Drawer.Screen
-        name="teste/index"
+        options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
+        name="(stop)"
+      />
+      <Drawer.Screen
+        options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
+        name="(change-reference)"
+      />
+      <Drawer.Screen
         options={{
-          title: 'Dashboard',
-          drawerIcon: ({ color, size }) => (
-            <Feather name="send" color={color} size={size} />
-          ),
+          drawerItemStyle: { display: 'none' },
+          swipeEnabled: false,
+          unmountOnBlur: true,
         }}
+        name="index"
       />
-      {/* <Drawer.Screen name="index" /> */}
     </Drawer>
   );
 }

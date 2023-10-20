@@ -1,12 +1,13 @@
 import styled from 'styled-components/native';
 
-const Wrapper = styled.View``;
+const Wrapper = styled.View`
+  position: relative;
+`;
 
 const ContentWrapper = styled.View`
   align-items: center;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   flex-direction: row;
-  border-radius: ${({ theme }) => theme.border.radius[10]};
 `;
 
 const Error = styled.Text`
@@ -19,14 +20,22 @@ const Text = styled.Text`
   color: ${({ theme }) => theme.colors.black};
 `;
 
-const Icon = styled.Pressable`
-  padding-left: 10px;
+const Icon = styled.TouchableOpacity`
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  padding: 10px;
 `;
 
 const Input = styled.TextInput`
-  width: 90%;
+  width: 100%;
+  position: relative;
   padding: 10px;
+  border-radius: ${({ theme }) => theme.border.radius[4]};
   font-size: 16px;
+  border: ${({ focusable }) => (focusable ? '2px' : '1px')} solid
+    ${({ theme, focusable }) =>
+      focusable ? theme.colors.primary.ring : theme.colors.black};
   color: ${({ theme }) => theme.colors.black};
 `;
 

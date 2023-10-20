@@ -1,14 +1,19 @@
 {
   "cli": {
-    "version": ">= 4.1.2"
+    "version": ">= 4.1.2",
+    "appVersionSource": "remote"
   },
   "build": {
     "preview": {
       "android": {
+        "autoIncrement": true
+      },
+      "ios": {
+        "simulator": true,
         "distribution": "internal"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://201.76.5.146:39106/"
+        "EXPO_PUBLIC_API_URL": "https://nginx.iforth.com.br:39105/"
       }
     }
   }

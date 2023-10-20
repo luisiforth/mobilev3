@@ -1,15 +1,10 @@
 import { useRef, useCallback, useState } from 'react';
-import {
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
+import { TextInput, TouchableOpacityProps } from 'react-native';
 
-import { COLORS, radius, spaces } from '@/constants';
 import { Feather } from '@expo/vector-icons';
-import styled from 'styled-components/native';
+import { useTheme } from 'styled-components/native';
 
+import * as S from './styles';
 type SearchProps = {
   placeholder: string;
   onChangeText?: (text: string) => void;
@@ -18,7 +13,7 @@ type SearchProps = {
 export default function Search({ placeholder, ...props }: SearchProps) {
   const inputRef = useRef<TextInput>(null);
   const [isFocused, setIsFocused] = useState(false);
-
+  const theme = useTheme();
   const handleSelectedInput = useCallback(() => {
     inputRef.current?.focus();
     setIsFocused(true);
@@ -28,46 +23,29 @@ export default function Search({ placeholder, ...props }: SearchProps) {
     setIsFocused(false);
   }, []);
 
-  const containerStyle = isFocused ? [style.input, style.focused] : style.input;
+  const handleFocus = useCallback(() => {
+    if (isFocused) {
+      return theme.colors.primary.ring;
+    }
+    return theme.colors.primary[500];
+  }, [isFocused]);
 
   return (
-    <TouchableOpacity
+    <S.Root.Input
       activeOpacity={0.8}
       onPress={handleSelectedInput}
-      style={containerStyle}
+      //@ts-ignore
+      onFocused={isFocused}
       {...props}
     >
       <TextInput
         ref={inputRef}
         onBlur={handleBlur}
+        onFocus={handleSelectedInput}
         maxLength={29}
         placeholder={placeholder}
       />
-      <Feather name="search" size={25} />
-    </TouchableOpacity>
+      <Feather name="search" size={25} color={handleFocus()} />
+    </S.Root.Input>
   );
 }
-
-const style = StyleSheet.create({
-  focused: {
-    borderColor: COLORS.primary.ring,
-  },
-
-  input: {
-    alignItems: 'center',
-    borderColor: COLORS.black,
-    borderRadius: radius[16],
-    borderWidth: 2,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: spaces[10],
-    paddingLeft: spaces[10],
-    paddingRight: spaces[10],
-  },
-});
-
-const focused = styled.TouchableOpacity``;
-
-export const Root = {
-  focused: focused,
-};

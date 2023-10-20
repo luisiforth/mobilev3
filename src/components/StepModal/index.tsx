@@ -4,14 +4,17 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  ActivityIndicator,
+  LayoutRectangle,
 } from 'react-native';
 
-import Button from '@/components/Button';
 import { ProgressBar } from '@/components/ProgressBar';
+import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 
 import * as S from './styles';
+import { NativeSyntheticEvent } from 'react-native';
 
 interface StepModalProps {
   schema: Yup.ObjectSchema<FieldValues>;
@@ -22,6 +25,12 @@ interface StepModalProps {
 export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [areRequiredFieldFilled, setAreRequiredFieldsFilled] = useState(false);
+  const onContentLayout = (
+    event: NativeSyntheticEvent<{ layout: LayoutRectangle }>
+  ) => {
+    const { height } = event.nativeEvent.layout;
+    return height;
+  };
 
   const handleAreRequiredFieldsFilled = (value: boolean) => {
     return value
@@ -39,6 +48,8 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
     formState: { errors },
   } = methods;
 
+  // console.log(errors)
+
   const componentElement = steps.map((Component, index) => (
     <Component
       key={index}
@@ -46,6 +57,7 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
       control={control}
       methods={methods}
       errors={errors}
+      on
     />
   ));
 
@@ -59,23 +71,56 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
     setCurrentStep((currentStep) => currentStep + 1);
   }, [currentStep, steps.length]);
 
+  // console.log(methods.formState.errors);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView enabled>
         <S.Root.Wrapper>
           <ProgressBar total={steps.length} current={currentStep} />
           {componentElement[currentStep - 1]}
-          {currentStep > 1 && <Button text="Voltar" onPress={handleBack} />}
-          {currentStep != steps.length && (
-            <Button text="Próximo" onPress={handleNext} />
-          )}
-          {currentStep == steps.length && (
-            <Button
-              disabled={areRequiredFieldFilled}
-              text="Enviar"
-              onPress={handleSubmit(onSubmit)}
-            />
-          )}
+          <S.Root.Content>
+            {currentStep > 1 && (
+              <S.Root.Button activeOpacity={0.9} onPress={handleBack}>
+                <Feather name="chevron-left" size={25} color={'white'} />
+                <S.Root.Text>Voltar</S.Root.Text>
+              </S.Root.Button>
+            )}
+            {currentStep != steps.length && (
+              <S.Root.Button
+                disabled={areRequiredFieldFilled}
+                activeOpacity={0.9}
+                onPress={handleNext}
+              >
+                <S.Root.Text>Próximo</S.Root.Text>
+                <Feather name="chevron-right" size={25} color={'white'} />
+              </S.Root.Button>
+            )}
+            {currentStep == steps.length && (
+              <S.Root.Button
+                //@ts-ignore
+                finalStep
+                disabled={
+                  areRequiredFieldFilled || methods.formState.isSubmitting
+                }
+                activeOpacity={0.9}
+                onPress={handleSubmit(onSubmit)}
+              >
+                {methods.formState.isSubmitting ? (
+                  <ActivityIndicator color={'white'} />
+                ) : (
+                  <>
+                    <S.Root.Text>Enviar</S.Root.Text>
+                    <Feather
+                      name="check"
+                      size={25}
+                      color={'white'}
+                      style={{ marginHorizontal: 5 }}
+                    />
+                  </>
+                )}
+              </S.Root.Button>
+            )}
+          </S.Root.Content>
         </S.Root.Wrapper>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>

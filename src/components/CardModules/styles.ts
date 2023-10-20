@@ -25,10 +25,12 @@ const Wrap = styled.View`
 `;
 
 const Wrapper = styled.TouchableOpacity`
-  border: 2px solid ${({ theme }) => theme.colors.black};
+  background: ${({ theme }) => theme.colors.background};
+  border: 2px solid ${({ theme }) => theme.colors.primary[500]};
   border-radius: ${({ theme }) => theme.border.radius[10]};
   padding: ${({ theme }) => theme.spacings[12]};
   flex: 1 0 150px;
+  margin: 5px;
   gap: ${({ theme }) => theme.spacings[10]};
   align-items: center;
 `;
@@ -40,19 +42,17 @@ const Text = styled.Text`
 `;
 
 const Title = styled.Text`
-  color: ${({ theme }) => theme.colors.black};
+  color: ${({ theme }) => theme.colors.primary[500]};
   font-size: ${({ theme }) => theme.font.sizes.lg};
   font-weight: ${({ theme }) => theme.font.bold};
 `;
 
-const Icon = styled(Feather)`
-  font-size: 25px;
-`;
+const Icon = styled(Feather)``;
 
 export const Root = {
-  SkeletonText: ShimmerPlaceholderStyleText,
-  SkeletonIcon: ShimmerPlaceholderStyleIcon,
   Icon: Icon,
+  SkeletonIcon: ShimmerPlaceholderStyleIcon,
+  SkeletonText: ShimmerPlaceholderStyleText,
   Text: Text,
   Title: Title,
   Wrap: Wrap,

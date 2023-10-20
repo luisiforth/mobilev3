@@ -1,22 +1,23 @@
-import { PressableProps } from 'react-native';
+import { TouchableOpacityProps } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
+import { useTheme } from 'styled-components/native';
 
 import * as S from './styles';
-import theme from '@/styles/theme';
 
 type InputProps = {
   icon: keyof typeof Feather.glyphMap;
   disableTouch?: boolean;
-} & PressableProps;
+} & TouchableOpacityProps;
 
 export default function InputIcon({
   icon,
-  disableTouch = true,
+  disableTouch = false,
   ...props
 }: InputProps) {
+  const theme = useTheme();
   return (
-    <S.Root.Icon disabled={disableTouch} {...props}>
+    <S.Root.Icon disabled={disableTouch} activeOpacity={0.5} {...props}>
       <Feather name={icon} size={25} color={theme.colors.black} />
     </S.Root.Icon>
   );

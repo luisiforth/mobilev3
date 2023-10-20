@@ -1,19 +1,26 @@
-import { FieldError } from 'react-hook-form';
-
+import { Text } from 'react-native';
 import * as S from './styles';
 
 type InputProps = {
   children: React.ReactNode;
   label: string;
-  error?: FieldError;
+  error?: string;
+  required?: boolean;
 };
 
-export default function SelectRoot({ children, error, label }: InputProps) {
+export default function SelectRoot({
+  children,
+  error,
+  label,
+  required,
+}: InputProps) {
   return (
     <S.Root.Wrapper>
-      <S.Root.Text>{label}</S.Root.Text>
+      <S.Root.Text>
+        {label} {required && <Text style={{ color: 'red' }}> *</Text>}
+      </S.Root.Text>
       <S.Root.ContentWrapper>{children}</S.Root.ContentWrapper>
-      {error && <S.Root.Error> {error.message} * </S.Root.Error>}
+      {error && <S.Root.Error> {error} * </S.Root.Error>}
     </S.Root.Wrapper>
   );
 }
