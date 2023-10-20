@@ -14,10 +14,10 @@ export function useOnRequired<T extends FieldValues>(
   const checkRequiredField = () => {
     return fieldsWatch.every(
       (element: string[] | string | number | undefined) => {
-        if (typeof element === 'object') return element != null;
         if (element == undefined) return false;
-        if (typeof element === 'string') return !!element.length;
         if (Array.isArray(element)) return !!element.length;
+        if (typeof element === 'object') return element != null;
+        if (typeof element === 'string') return !!element.length;
         return element >= 0;
       }
     );

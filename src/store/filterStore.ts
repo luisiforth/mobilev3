@@ -6,6 +6,7 @@ import {
   StorageCredentialsProps,
   StorageDefectsProps,
   StorageFilterProps,
+  StorageImagesProps,
 } from './types';
 
 export const useFilterStore = create<StorageFilterProps>()(

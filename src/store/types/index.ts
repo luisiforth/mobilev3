@@ -23,6 +23,12 @@ export interface StorageCredentialsProps {
   setUser: (credential: CredentialsrProps) => void;
 }
 
+export interface StorageImagesProps {
+  images: string[] | string;
+  setImages: (state: string) => void;
+  // removeImages: (state: string) => void;
+}
+
 export interface StorageDefectsProps {
   defects: [];
   setDefect: (defects: []) => void;

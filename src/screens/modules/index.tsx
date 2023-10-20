@@ -18,6 +18,7 @@ import useAsync from '@/hooks/useAsync';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigation } from 'expo-router';
 import { api } from 'util/axios/axios';
 import { addLabelAndValue } from 'util/handle-options-props';
 
@@ -27,7 +28,6 @@ import { OptionLineProps, OptionUnitProps } from './types';
 import { modules_data } from './utils/cards';
 
 import * as S from './styles';
-import { useNavigation } from 'expo-router';
 
 export default function HomeLayout() {
   const methods = useForm({
@@ -127,12 +127,12 @@ export default function HomeLayout() {
               // disabled={modalVisible}
               onPress={bottomSheetModalRefShow.current?.handlePresentModalPress}
             />
-            <Header.Options type="att" />
+            {/* <Header.Options type="att" /> */}
             <Search placeholder="Buscar ..." />
-            <Header.Options
+            {/* <Header.Options
               type="logout"
               onPress={() => (setUser(null), navigation.navigate('/'))}
-            />
+            /> */}
             <Header.Options type="menu" />
           </Header.YStack>
           <Header.YStack>

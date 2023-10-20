@@ -2,13 +2,13 @@ import React, { useCallback } from 'react';
 import { Alert, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
 import { useNetInfo } from '@/hooks/useNetInfo';
+import { useCredentialStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { useDrawerStatus } from '@react-navigation/drawer';
 import { NavigationProp } from '@react-navigation/native';
 import { DrawerActions } from '@react-navigation/routers';
 import { useNavigation } from 'expo-router/';
 import { useTheme } from 'styled-components/native';
-import { useCredentialStore } from '@/store/filterStore';
 
 type OptionsProps = {
   type: 'menu' | 'filter' | 'att' | 'logout';
