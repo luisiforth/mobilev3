@@ -132,7 +132,7 @@ export default function StopAppointmentLayout() {
 
     Alert.alert(
       'Deseja cancelar ?',
-      `Você tem certeza disso ? quer mesmo cancelar o ${id}`,
+      `Realmente deseja cancelar o registro n° ${id}`,
       [
         {
           text: 'Sim',
@@ -141,7 +141,7 @@ export default function StopAppointmentLayout() {
             if (response.status != 200) {
               Alert.alert('', 'Deu algum erro');
             }
-            Alert.alert('', 'Parada cancelada com sucesso');
+            Alert.alert('', 'Registro cancelado com sucesso');
             setFilterValue([]);
             refetch();
             return bottomSheetModalRefShow.current?.handleDismiss();

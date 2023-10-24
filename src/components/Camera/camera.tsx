@@ -38,6 +38,7 @@ const MemoizedCameraCustom2 = React.memo(function CameraCustom2({
   };
 
   const takePicture = useCallback(async () => {
+    console.log(images.length);
     const photo = await cameraRef.current?.takePictureAsync({
       base64: true,
       imageType: ImageType.jpg,
@@ -46,26 +47,20 @@ const MemoizedCameraCustom2 = React.memo(function CameraCustom2({
       skipProcessing: true,
     });
 
-    if (images.length === 2) {
-      return closeModal();
-    }
-
     if (photo) {
       setImages((prevImages) => [...prevImages, photo.base64] as string[]);
-      if (images.length === 2) {
-        return closeModal();
-      }
+      if (images.length === 2) return closeModal();
+      return Alert.alert('Aviso', 'Deseja continuar batendo foto?', [
+        {
+          text: 'Sim',
+        },
+        {
+          onPress: () => closeModal(),
+          style: 'cancel',
+          text: 'Não',
+        },
+      ]);
     }
-    return Alert.alert('Aviso', 'Deseja continuar batendo foto?', [
-      {
-        text: 'Sim',
-      },
-      {
-        onPress: () => closeModal(),
-        style: 'cancel',
-        text: 'Não',
-      },
-    ]);
   }, [images]);
 
   useEffect(() => {

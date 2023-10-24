@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FieldErrors, UseFormReturn } from 'react-hook-form';
 import { Pressable } from 'react-native';
 
@@ -6,7 +6,7 @@ import { ControlledDateTime } from '@/components/ControlledDateTime';
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';
 // import { useOnRequired } from '@/hooks/useOnRequired';
-import { format } from 'date-fns';
+import { addMinutes, format, parseISO } from 'date-fns';
 
 import { schema } from '../schema';
 
@@ -19,7 +19,10 @@ interface StepProps {
 }
 
 export const StepTwo = ({ methods }: StepProps) => {
-  const [timeInMinutes, setTimeInMinutes] = useState('0');
+  const [differenceInMinutes, setDifferenceInMinutes] = useState<Date>();
+  // new Date()
+
+  const [finalHour, setFinalHour] = useState<Date>(new Date());
   const [visibleDateInitial, setVisibleDateInitial] = useState(false);
   const [visibleDateEnd, setVisibleDateEnd] = useState(false);
   const [visibleTimeInitial, setVisibleTimeInitial] = useState(false);
@@ -34,10 +37,12 @@ export const StepTwo = ({ methods }: StepProps) => {
   };
 
   const formatHourToPtBR = (date: Date) => {
-    return date.toLocaleTimeString('pt-BR', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
+    return (
+      date.toLocaleTimeString('pt-BR', {
+        hour: '2-digit',
+        minute: '2-digit',
+      }) || date
+    );
   };
 
   const formatDateToPtBR = (date: Date) => {
@@ -53,29 +58,53 @@ export const StepTwo = ({ methods }: StepProps) => {
   };
 
   const handleHoursDiff = () => {
+    setDifferenceInMinutes(undefined);
     const initialHour = methods.getValues('initialHour') || new Date(); // Converter o valor para um objeto Date
     const finalHour = methods.getValues('finalHour') || new Date(); // Converter o valor para um objeto Date
-
     if (!isNaN(initialHour) && !isNaN(finalHour)) {
       const diffMilliseconds = finalHour - initialHour; // Diferença em milissegundos
       const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60)); // Diferença em minutos
-      setTimeInMinutes(diffMinutes.toString());
       return methods.setValue('timeInMinutes', diffMinutes.toString());
     } else {
-      console.log('Horas inválidas.'); // Trate o caso de horas inválidas conforme necessário
       return methods.setValue('timeInMinutes', '0');
     }
   };
-// console.log(methods.formState.errors)
+
+  useEffect(() => {
+    methods.setValue('finalHour', differenceInMinutes);
+    setFinalHour(methods.getValues('finalHour'));
+  }, [differenceInMinutes]);
+
+  const updateTimeInputs = (difference: number) => {
+    if (isNaN(difference)) return;
+
+    const dateInit = format(
+      methods.getValues('initialHour') || new Date(),
+      'yyyy-MM-dd'
+    );
+    const timeInitial =
+      methods.getValues('initialHour') || formatHourToPtBR(new Date());
+    const newEndTime = addMinutes(
+      parseISO(`${dateInit}T${timeInitial}`),
+      difference
+    );
+
+    if (newEndTime) {
+      setDifferenceInMinutes(newEndTime);
+    }
+  };
+
   const onChangeTimeInitial = () => {
     handleHoursDiff();
     return showTimeInitial();
   };
 
   const onChangeTimeEnd = () => {
+    setFinalHour(methods.getValues('finalHour'));
     handleHoursDiff();
     return showTimeFinal();
   };
+
   const showDateInitial = useCallback(() => {
     setVisibleDateInitial(!visibleDateInitial);
   }, [visibleDateInitial]);
@@ -124,15 +153,21 @@ export const StepTwo = ({ methods }: StepProps) => {
         <Pressable onPress={showTimeFinal}>
           <TextInput.Wrapper label="Hora Final">
             <TextInput.Content
-              value={validHourValue(methods.getValues('finalHour'))}
+              value={validHourValue(finalHour)}
               editable={false}
             />
           </TextInput.Wrapper>
         </Pressable>
       </S.Root.Container>
       <TextInput.Wrapper label="Tempo em minutos">
-        <TextInput.Content value={timeInMinutes} editable={false} />
-        {/* <ControlledInput control={methods.control} name="timeInMinutes" /> */}
+        {/* <TextInput.Content value={timeInMinutes} editable={false} /> */}
+        <ControlledInput
+          control={methods.control}
+          defaultValue={'0'}
+          // value={timeInMinutes}
+          onValueChanged={updateTimeInputs}
+          name="timeInMinutes"
+        />
       </TextInput.Wrapper>
       <TextInput.Wrapper label="Observação">
         <ControlledInput

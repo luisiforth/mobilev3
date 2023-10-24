@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 
@@ -89,6 +90,17 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       )
     : [];
 
+  useEffect(() => {
+    if (methods.getValues('typeStopped')) {
+      const id = methods.getValues('typeStopped').IDTIPOPARADA;
+      return type_stopped_mutate.mutate(id);
+    }
+
+    if (methods.getValues('motiveStopped')) {
+      return methods.setValue('motiveStopped', optionReasonStopped);
+    }
+  }, []);
+
   return (
     <S.Root.WrapperSteps>
       <Select.Wrapper required label="Selecione o Equipamento">
@@ -123,7 +135,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       <Select.Wrapper required label="Selecione o Motivo da Parada ">
         <ControlledSelect
           item={optionReasonStopped}
-          enabled={optionReasonStopped.length > 0}
+          // enabled={optionReasonStopped.length > 0}
           placeholder="Selecione a Parada"
           control={methods.control}
           name="motiveStopped"

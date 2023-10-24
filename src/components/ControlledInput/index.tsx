@@ -9,15 +9,31 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onValueChanged?: (val: any) => void;
 } & InputProps;
 
-export function ControlledInput({ control, name, ...props }: Props) {
+export function ControlledInput({
+  onValueChanged,
+  control,
+  name,
+  ...props
+}: Props) {
   return (
     <Controller
       name={name}
       control={control}
       render={({ field: { onChange, value } }) => (
-        <TextInput.Content onChangeText={onChange} value={value} {...props} />
+        <TextInput.Content
+          onChangeText={(val) => {
+            onChange(val);
+            if (onValueChanged) {
+              onValueChanged(val);
+            }
+          }}
+          value={value}
+          {...props}
+        />
       )}
     />
   );

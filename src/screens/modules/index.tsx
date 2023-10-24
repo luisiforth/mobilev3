@@ -18,7 +18,6 @@ import useAsync from '@/hooks/useAsync';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from 'expo-router';
 import { api } from 'util/axios/axios';
 import { addLabelAndValue } from 'util/handle-options-props';
 
@@ -43,8 +42,7 @@ export default function HomeLayout() {
 
   const bottomSheetModalRefShow = useRef<ComportModalProps>(null);
   const { setFilter, filters } = useFilterStore();
-  const { credential, setUser } = useCredentialStore();
-  const navigation = useNavigation();
+  const { credential } = useCredentialStore();
 
   const insets = useSafeAreaInsets();
   const { getDefects } = useAsync();

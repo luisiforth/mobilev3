@@ -1,5 +1,5 @@
 import LoginLayout from '@/screens/login';
 
-export default function Home() {
+export default function SignIn() {
   return <LoginLayout />;
 }

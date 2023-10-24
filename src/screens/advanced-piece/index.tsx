@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { FlatList, Text, View, ActivityIndicator, Alert } from 'react-native';
+import { FlatList, Text, View, Alert } from 'react-native';
 import { RefreshControl } from 'react-native';
 import { useMutation, useQuery } from 'react-query';
 
 import Button from '@/components/Button';
 import { CardCep } from '@/components/CardCep';
+import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import StepModal from '@/components/StepModal';
 import useRealmCrud from '@/hooks/useCrud';
@@ -21,7 +22,6 @@ import { StepCamera, StepOne, StepTwo, schema } from './components/Modals';
 import { renderItemProps } from './types';
 
 import * as S from './styles';
-import Loading from '@/components/Loading';
 
 export default function AdvancedPieceLayout() {
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
@@ -106,7 +106,12 @@ export default function AdvancedPieceLayout() {
   );
 
   useEffect(() => {
-    if (isConnected && dataFromRealm && dataFromRealm.length > 0) {
+    if (
+      !isLoading &&
+      isConnected &&
+      dataFromRealm &&
+      dataFromRealm.length > 0
+    ) {
       Alert.alert(
         'Vimos que possuem dados não sincronizados.',
         'Desejas sincronizar este dados ?',
@@ -115,7 +120,8 @@ export default function AdvancedPieceLayout() {
             text: 'Sim',
             onPress: async () => {
               const result = await api.post(postAdvPiece(), dataFromRealm);
-              if (result.status == 200) return deleteAll();
+              deleteAll();
+              if (result.status == 200) return refetch();
             },
           },
           {
@@ -133,7 +139,7 @@ export default function AdvancedPieceLayout() {
       <CardCep.Wrapper onAsync={item?.FLAG} key={index}>
         <Link href={`/cep/${id}`}>
           <S.Root.ContainerRenderItem>
-            <CardCep.Image url={item.IMAGEM || item.IMAGEM} />
+            <CardCep.Image url={[item.IMAGEM[0]] || item.IMAGEM} />
             <S.Root.ContainerRenderItemText>
               <Text>
                 <S.Root.Text>TOM: </S.Root.Text>
@@ -223,10 +229,9 @@ export default function AdvancedPieceLayout() {
   return (
     <S.Root.Wrapper>
       {isLoading || isRefetching ? (
-       <Loading />
+        <Loading />
       ) : (
         <>
-          {/* <Text>{dataFromRealm == undefined}</Text> */}
           <S.Root.WrapperFlatList>
             <FlatList
               data={data || []}
@@ -249,7 +254,7 @@ export default function AdvancedPieceLayout() {
               bottomSheetModalRef.current?.handlePresentModalPress()
             }
           />
-          <Modal snapPoints={['40%', '80%']} ref={bottomSheetModalRef}>
+          <Modal snapPoints={['80%', '80%']} ref={bottomSheetModalRef}>
             <StepModal
               onSubmit={onSubmit}
               schema={schema}

@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { TouchableOpacity } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 
 import MemoizedCameraCustom2 from '@/components/Camera/camera';
 import { CameraPreview } from '@/components/CameraPreview';
-// import { ModalCustom } from '@/components/Modal';
 import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import { useOnRequired } from '@/hooks/useOnRequired';
@@ -23,11 +22,10 @@ interface StepProps {
 export const StepCamera = ({ methods, onRequired }: StepProps) => {
   const image = methods.getValues().images;
   const [imageZoom, setImageZoom] = useState('');
-  const [images, setImages] = useState<string[]>([]);
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
   const bottomSheetModalRef2 = useRef<ComportModalProps>(null);
-  const snapPoints = useMemo(() => ['40%', '95%'], []);
-  const snapPoints2 = useMemo(() => ['40%', '85%'], []);
+  const snapPoints = useMemo(() => ['90%', '95%'], []);
+  const snapPoints2 = useMemo(() => ['70%', '85%'], []);
   const [showSpinner, setShowSpinner] = useState(false);
 
   useOnRequired(['images'], {
@@ -61,6 +59,7 @@ export const StepCamera = ({ methods, onRequired }: StepProps) => {
     setShowSpinner(true);
     bottomSheetModalRef.current?.handlePresentModalPress();
   }, []);
+
   return (
     <S.Root.WrapperSteps>
       {image?.length > 0 ? (
@@ -93,13 +92,15 @@ export const StepCamera = ({ methods, onRequired }: StepProps) => {
           </>
         ) : (
           <>
-            <Feather
-              name={'camera'}
-              style={{ alignSelf: 'flex-end', marginRight: 10 }}
-              size={25}
-              onPress={handleOpen}
-              color={'black'}
-            />
+            {image.length < 3 && (
+              <Feather
+                name={'camera'}
+                style={{ alignSelf: 'flex-end', marginRight: 10 }}
+                size={25}
+                onPress={handleOpen}
+                color={'black'}
+              />
+            )}
             <Carousel
               width={283}
               height={400}

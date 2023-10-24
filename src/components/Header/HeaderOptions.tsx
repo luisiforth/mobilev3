@@ -69,6 +69,7 @@ function LogoutOption({
   const { setUser } = useCredentialStore();
   function handlePress() {
     setUser({ userid: null, username: null });
+    console.log('a');
     //@ts-ignore
     return navigation.navigate('index');
   }

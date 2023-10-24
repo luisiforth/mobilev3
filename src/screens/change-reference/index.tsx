@@ -9,7 +9,6 @@ import Modal, { ComportModalProps } from '@/components/Modal';
 import { TextInput } from '@/components/TextInput';
 import { useFilterStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
-import { useFocusEffect } from '@react-navigation/native';
 import { Link, useNavigation } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
@@ -197,10 +196,9 @@ export default function ChangeReferenceLayout() {
               <TextInput.Wrapper label="Data/Hora Fim">
                 <TextInput.Content
                   editable={false}
-                  value={
-                    `${filteredItem[0]?.DATAFIMPRODLINHA} ${filteredItem[0]?.HORAFIMPRODLINHA}` ||
-                    ''
-                  }
+                  value={`${filteredItem[0]?.DATAFIMPRODLINHA || ''} ${
+                    filteredItem[0]?.HORAFIMPRODLINHA || ''
+                  }`}
                 />
               </TextInput.Wrapper>
               <TextInput.Wrapper label="Usuário">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Alert, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,79 +7,51 @@ import Button from '@/components/Button';
 import { Card } from '@/components/Card';
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';
-import { useCredentialStore } from '@/store/filterStore';
+import { useAuth } from '@/hooks/useAuth';
 import { yupResolver } from '@hookform/resolvers/yup';
-import axios from 'axios';
-import { useNavigation } from 'expo-router';
-import * as SecureStore from 'expo-secure-store';
-import { encode } from 'js-base64';
-import { api } from 'util/axios/axios';
 
-import SVGImage from '../../../assets/icon.svg';
-import { getToken } from './api-urls';
 import { schema } from './schema';
 
 import * as S from './styles';
 // import { Image } from 'expo-image';
 
 export default function LoginLayout() {
-  const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
-  const { setUser, credential } = useCredentialStore();
   const insets = useSafeAreaInsets();
+  const { signIn } = useAuth();
   const methods = useForm({
     resolver: yupResolver(schema),
   });
 
   const {
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = methods;
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const login_encoded = encode(
-      `${data.user.toLowerCase()}|${data.password.toLowerCase()}`
-    );
+    setIsLoading(true);
+
+    if (!data.user.trim() || !data.password.trim()) {
+      setIsLoading(false);
+      return Alert.alert('Erro', 'Todos os campos são obrigatórios');
+    }
+
     try {
-      const request = await api.get(getToken(), {
-        headers: { iforthsistemas: `iforth ${login_encoded}` },
-      });
-
-      if (request.status == 200) {
-        await SecureStore.setItemAsync('iforthToken', request.data.TOKEN);
-        const data = {
-          userid: request.data.IDUSU,
-          username: request.data.NOMEUSU,
-        };
-        setUser(data);
-        //@ts-ignore
-        return navigation.navigate('modules');
-      }
+      await signIn(data.user, data.password);
+      setIsLoading(false);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        Alert.alert('Erro', `Erro: ${error.message}`);
-        return console.log(error.toJSON());
-      }
-
-      Alert.alert('Erro', `Erro: ${error}`);
-      return;
+      Alert.alert('Erro', 'Não foi possível realizar o login');
     }
+
+    return;
   };
-
-  useEffect(() => {
-    if (credential?.userid != null) {
-      // console.log({ credential });
-      //@ts-ignore
-      return navigation.navigate('modules');
-    }
-  }, []);
 
   return (
     <>
       <S.Root.WrapperIndex insets={insets}>
-        {/* <SVGImage width={280} height={250} /> */}
         <Image
-          style={{ width: 400, height: 300, marginTop: -10 }}
+          style={{ width: 400, height: 300, marginTop: -40, marginBottom: -80 }}
           source={require('./logo.png')}
         />
         <Card.Wrapper>

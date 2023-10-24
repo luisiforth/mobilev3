@@ -8,7 +8,6 @@ export default function HomeLayout() {
   return (
     <Drawer
       drawerContent={CustomDrawer}
-      initialRouteName="index"
       screenOptions={{
         drawerActiveTintColor: theme.colors.black,
         freezeOnBlur: true,
@@ -39,14 +38,6 @@ export default function HomeLayout() {
       <Drawer.Screen
         options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
         name="(change-reference)"
-      />
-      <Drawer.Screen
-        options={{
-          drawerItemStyle: { display: 'none' },
-          swipeEnabled: false,
-          unmountOnBlur: true,
-        }}
-        name="index"
       />
     </Drawer>
   );

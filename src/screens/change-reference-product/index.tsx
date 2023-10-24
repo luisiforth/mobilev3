@@ -120,6 +120,17 @@ export default function ChangeReferenceProductLayout({
   };
 
   const handleSubmit = async () => {
+    Alert.alert(
+      'Deseja realizar está ação ?',
+      'Deseja realmente trocar/pausar produto?',
+      [
+        { text: 'Sim', onPress: () => handleFetch() },
+        { text: 'Não', style: 'cancel' },
+      ]
+    );
+  };
+
+  const handleFetch = async () => {
     await api.put(
       putProductInReferenceURL({
         idpcp: filteredItem[0]?.IDPCPITEM,
@@ -142,6 +153,8 @@ export default function ChangeReferenceProductLayout({
     if (response.status != 200) {
       return Alert.alert('Houve um problema no envio', '');
     }
+
+    Alert.alert('', `Registro enviado com sucesso`);
     return navigation.goBack();
   };
 
