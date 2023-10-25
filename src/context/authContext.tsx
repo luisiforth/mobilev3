@@ -1,10 +1,13 @@
-import { ReactNode, createContext, useState } from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
 import { useProtectedRouter } from '@/hooks/useProtectedRouter';
-import { useCredentialStore } from '@/store/filterStore';
+import {
+  useCredentialStore,
+  useFilterStore,
+  useTokenStore,
+} from '@/store/filterStore';
 import axios from 'axios';
-import * as SecureStore from 'expo-secure-store';
 import { encode } from 'js-base64';
 import { api } from 'util/axios/axios';
 
@@ -12,7 +15,7 @@ import { getToken } from './api-urls';
 
 type AuthContextData = {
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: () => void;
 };
 
 export const AuthContext = createContext<AuthContextData>(
@@ -24,14 +27,20 @@ type AuthProviderProps = {
 };
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [userToken, setUserToken] = useState('');
-  useProtectedRouter(userToken);
+  const { token, setToken, setDeleteToken } = useTokenStore();
   const { setUser } = useCredentialStore();
-
+  const { setFilter } = useFilterStore();
+  // const [userToken, setUserToken] = useState(token);
+  useProtectedRouter(token);
+  // console.log(token);
   function updateToken(token: string) {
-    setUserToken(token);
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    setToken(token);
   }
+
+  useEffect(() => {
+    updateToken(token!);
+  }, [token]);
 
   async function signIn(user: string, password: string) {
     const login_encoded = encode(
@@ -43,7 +52,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       updateToken(request.data.TOKEN);
-      await SecureStore.setItemAsync('iforthToken', request.data.TOKEN);
+      setToken(request.data.TOKEN);
 
       const data = {
         userid: request.data.IDUSU,
@@ -64,9 +73,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signOut() {
-    await SecureStore.deleteItemAsync('iforthToken');
-    setUserToken('');
+  function signOut() {
+    setDeleteToken();
+    // setUserToken('');
+    setFilter({ line: null, unit: null });
     setUser({ userid: null, username: null });
   }
 

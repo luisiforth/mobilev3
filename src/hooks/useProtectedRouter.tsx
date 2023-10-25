@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { router, useRootNavigation, useSegments } from 'expo-router';
 
-export function useProtectedRouter(token: string | null) {
+export function useProtectedRouter(token: string | undefined) {
   const [isNavigationReady, setNavigationReady] = useState(false);
   const rootNavigation = useRootNavigation();
   const segments = useSegments();
@@ -19,6 +19,7 @@ export function useProtectedRouter(token: string | null) {
   }, [rootNavigation]);
 
   useEffect(() => {
+    // console.log(isNavigationReady);
     if (!isNavigationReady) return;
     const inAuthGroup = segments[0] == '(auth)';
     if (!token && !inAuthGroup) {

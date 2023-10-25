@@ -47,21 +47,14 @@ export default function HomeLayout() {
   const insets = useSafeAreaInsets();
   const { getDefects } = useAsync();
   useEffect(() => {
-    if (filters) {
-      setValue('unit', filters.unit);
-      setValue('line', filters.line);
-    }
-
-    if (filters?.unit) {
-      mutate(filters.unit);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
-
-  useEffect(() => {
-    if (filters == null) {
+    if (!filters || !filters.unit)
       return bottomSheetModalRefShow.current?.handlePresentModalPress();
-    }
+
+    setValue('unit', filters.unit!);
+    setValue('line', filters.line!);
+
+    mutate(filters.unit!);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   const query_syncs = useQuery(['query_syncs', filters], async () => {
@@ -76,7 +69,7 @@ export default function HomeLayout() {
     async () => {
       // if (credential) return [];
       const response = await api.get<OptionUnitProps[]>(
-        getUnitAll(credential?.userid)
+        getUnitAll(credential?.userid as number)
       );
       return response.data;
     },
@@ -90,9 +83,9 @@ export default function HomeLayout() {
     data: response_line,
     isLoading,
   } = useMutation({
-    mutationFn: async (unit: { IDUNIDADE: number }) => {
+    mutationFn: async (unit: { value: number }) => {
       const response = await api.get<OptionLineProps[]>(
-        getLineAll(credential?.userid, unit.IDUNIDADE)
+        getLineAll(credential?.userid as number, unit.value)
       );
 
       return response.data;
@@ -142,7 +135,7 @@ export default function HomeLayout() {
 
         <CardNotification data={'a'} />
 
-        {!filters && !query_syncs.isLoading ? (
+        {!filters?.unit && !query_syncs.isLoading ? (
           <View
             style={{
               alignItems: 'center',

@@ -1,6 +1,6 @@
 type FilterProps = {
-  unit: { label: string; value: number };
-  line: { label: string; value: number };
+  unit: { label: string; value: number } | null;
+  line: { label: string; value: number } | null;
 };
 
 // type DefectProps = {
@@ -32,4 +32,16 @@ export interface StorageImagesProps {
 export interface StorageDefectsProps {
   defects: [];
   setDefect: (defects: []) => void;
+}
+
+export interface StorageTokenProps {
+  token: undefined | string;
+  setDeleteToken: () => void;
+  setToken: (token: string) => void;
+}
+
+export interface StorageEndPointProps {
+  endpoint: string;
+  // setDeleteToken: () => void;
+  setEndPoint: (endpoint: string) => void;
 }

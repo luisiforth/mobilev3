@@ -5,8 +5,9 @@ import { zustandStorage } from './MMKV';
 import {
   StorageCredentialsProps,
   StorageDefectsProps,
+  StorageEndPointProps,
   StorageFilterProps,
-  StorageImagesProps,
+  StorageTokenProps,
 } from './types';
 
 export const useFilterStore = create<StorageFilterProps>()(
@@ -52,6 +53,33 @@ export const useDefectsStore = create<StorageDefectsProps>()(
     }),
     {
       name: 'defects-storage',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useTokenStore = create<StorageTokenProps>()(
+  persist(
+    (set) => ({
+      setDeleteToken: () => set({ token: undefined }),
+      setToken: (token) => set({ token: token }),
+      token: undefined,
+    }),
+    {
+      name: 'token-storage',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useEndPointStore = create<StorageEndPointProps>()(
+  persist(
+    (set) => ({
+      endpoint: 'https://nginx.iforth.com.br:39105/',
+      setEndPoint: (endpoint) => set({ endpoint: endpoint }),
+    }),
+    {
+      name: 'endpoint-storage',
       storage: createJSONStorage(() => zustandStorage),
     }
   )

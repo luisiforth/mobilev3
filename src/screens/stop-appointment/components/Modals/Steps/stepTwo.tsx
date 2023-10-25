@@ -125,7 +125,7 @@ export const StepTwo = ({ methods }: StepProps) => {
     <S.Root.WrapperSteps>
       <S.Root.Container>
         <Pressable onPress={showDateInitial}>
-          <TextInput.Wrapper label="Data Inícial">
+          <TextInput.Wrapper label="Data inicial">
             <TextInput.Content
               value={validDateValue(methods.getValues('initialDate'))}
               editable={false}
@@ -133,9 +133,9 @@ export const StepTwo = ({ methods }: StepProps) => {
           </TextInput.Wrapper>
         </Pressable>
         <Pressable onPress={showTimeInitial}>
-          <TextInput.Wrapper label="Hora Inícial">
+          <TextInput.Wrapper label="Hora inicial">
             <TextInput.Content
-              value={validHourValue(methods.getValues('initialHour'))}
+              value={validHourValue(methods.getValues('initialHour')) as string}
               editable={false}
             />
           </TextInput.Wrapper>
@@ -143,7 +143,7 @@ export const StepTwo = ({ methods }: StepProps) => {
       </S.Root.Container>
       <S.Root.Container>
         <Pressable onPress={showDateEnd}>
-          <TextInput.Wrapper label="Data Final">
+          <TextInput.Wrapper label="Data final">
             <TextInput.Content
               value={validDateValue(methods.getValues('finalDate'))}
               editable={false}
@@ -151,9 +151,9 @@ export const StepTwo = ({ methods }: StepProps) => {
           </TextInput.Wrapper>
         </Pressable>
         <Pressable onPress={showTimeFinal}>
-          <TextInput.Wrapper label="Hora Final">
+          <TextInput.Wrapper label="Hora final">
             <TextInput.Content
-              value={validHourValue(finalHour)}
+              value={validHourValue(finalHour) as string}
               editable={false}
             />
           </TextInput.Wrapper>
@@ -162,6 +162,7 @@ export const StepTwo = ({ methods }: StepProps) => {
       <TextInput.Wrapper label="Tempo em minutos">
         {/* <TextInput.Content value={timeInMinutes} editable={false} /> */}
         <ControlledInput
+          inputMode="numeric"
           control={methods.control}
           defaultValue={'0'}
           // value={timeInMinutes}

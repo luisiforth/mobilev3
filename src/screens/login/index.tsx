@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { Alert, Image } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '@/components/Button';
@@ -8,7 +8,9 @@ import { Card } from '@/components/Card';
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';
 import { useAuth } from '@/hooks/useAuth';
+import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { router } from 'expo-router';
 
 import { schema } from './schema';
 
@@ -41,7 +43,8 @@ export default function LoginLayout() {
       await signIn(data.user, data.password);
       setIsLoading(false);
     } catch (error) {
-      Alert.alert('Erro', 'Não foi possível realizar o login');
+      setIsLoading(false);
+      console.log('Erro', 'Não foi possível realizar o login');
     }
 
     return;
@@ -50,6 +53,14 @@ export default function LoginLayout() {
   return (
     <>
       <S.Root.WrapperIndex insets={insets}>
+        <View>
+          <Feather
+            name={'corner-left-down'}
+            onPress={() => router.push('/config')}
+            size={24}
+            color={'black'}
+          />
+        </View>
         <Image
           style={{ width: 400, height: 300, marginTop: -40, marginBottom: -80 }}
           source={require('./logo.png')}

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { ActivityIndicator, Alert } from 'react-native';
 import { FlatList, View, Text } from 'react-native';
@@ -11,6 +11,7 @@ import StepModal from '@/components/StepModal';
 import { TextInput } from '@/components/TextInput';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import { format } from 'date-fns';
+import { router } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
 import { formatDate } from 'util/functions/formatDate';
@@ -42,10 +43,11 @@ export default function StopAppointmentLayout() {
   const { data, isLoading, refetch, isRefetching } = useQuery(
     'query_appointament_stop',
     async () => {
+      if (!filters) return router.back();
       const request = await api.get<StoppedAppointmentRequest>(
         getAllDataURL(
-          filters?.unit.value as number,
-          filters?.line.value as number,
+          filters.unit?.value as number,
+          filters.line?.value as number,
           dateRetroactive(),
           format(new Date(), 'dd/MM/yyyy'),
           30
@@ -56,10 +58,11 @@ export default function StopAppointmentLayout() {
     }
   );
 
-  const onSubmit: SubmitHandler<FieldValues> = async (
-    data: typeof schema.fields
-  ) => {
+  useLayoutEffect(() => {}, []);
+
+  const onSubmit = async (data: typeof schema.fields) => {
     bottomSheetModalRefStep.current?.handleDismiss();
+    if (!filters || !credential) return router.back();
     const body = {
       checkeficienciamotivoparada: 1,
       datafimparada: data.finalDate
@@ -79,13 +82,13 @@ export default function StopAppointmentLayout() {
       horaparada: null,
       horastotalparada: null,
       idfichaprod: data.product.value,
-      idlinha: filters?.line.value,
+      idlinha: filters.line?.value,
       idlinhaequip: data.equipment.value,
       idmotivoparada: data.motiveStopped.value,
       idparada: 0,
       idproducaoefi: 0,
-      idunidade: filters?.unit.value,
-      idusuario: credential?.userid || '0',
+      idunidade: filters.unit?.value,
+      idusuario: credential.userid || '0',
       obsparada: data.observation || '',
       sincparada: 0,
       tempominparada: data.timeInMinutes || '0',
@@ -247,13 +250,17 @@ export default function StopAppointmentLayout() {
                   <TextInput.Wrapper label="Data/Hora Inicio">
                     <TextInput.Content
                       editable={false}
-                      value={`${filterValue[0]?.DATAINIPARADA} ${filterValue[0]?.HORAINIPARADA}`}
+                      value={`${formatDate(
+                        filterValue[0]?.DATAINIPARADA
+                      )} ${removeHourZeros(filterValue[0]?.HORAINIPARADA)}`}
                     />
                   </TextInput.Wrapper>
                   <TextInput.Wrapper label="Data/Hora Fim">
                     <TextInput.Content
                       editable={false}
-                      value={`${filterValue[0]?.DATAFIMPARADA} ${filterValue[0]?.HORAFIMPARADA}`}
+                      value={`${formatDate(
+                        filterValue[0]?.DATAFIMPARADA
+                      )} ${removeHourZeros(filterValue[0]?.HORAFIMPARADA)}`}
                     />
                   </TextInput.Wrapper>
                   <TextInput.Wrapper label="Tempo (min)">

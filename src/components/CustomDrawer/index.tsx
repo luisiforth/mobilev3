@@ -3,7 +3,6 @@ import { Alert, Text, View } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 
 import { useAuth } from '@/hooks/useAuth';
-import { useCredentialStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import {
   DrawerContentComponentProps,
@@ -22,7 +21,7 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
     Alert.alert('Atualização', 'Versão: 2 \n TESTE TESTE');
   }, []);
 
-  const handleSignOut = useCallback(async () => {
+  const handleSignOut = useCallback(() => {
     Alert.alert('Sair', 'Deseja sair da aplicação ?', [
       {
         text: 'Cancelar',
