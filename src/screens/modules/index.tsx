@@ -46,7 +46,6 @@ export default function HomeLayout() {
 
   const insets = useSafeAreaInsets();
   const { getDefects } = useAsync();
-
   useEffect(() => {
     if (filters) {
       setValue('unit', filters.unit);
@@ -65,7 +64,7 @@ export default function HomeLayout() {
     }
   }, [filters]);
 
-  const query_syncs = useQuery(['query,syncs', filters], async () => {
+  const query_syncs = useQuery(['query_syncs', filters], async () => {
     if (!filters) {
       return bottomSheetModalRefShow.current?.handlePresentModalPress();
     }
@@ -73,15 +72,16 @@ export default function HomeLayout() {
   });
 
   const { data } = useQuery(
-    'query_unit',
+    ['query_unit', credential],
     async () => {
+      // if (credential) return [];
       const response = await api.get<OptionUnitProps[]>(
-        getUnitAll(credential ? credential.userid : 0)
+        getUnitAll(credential?.userid)
       );
       return response.data;
     },
     {
-      cacheTime: 0,
+      enabled: !!credential?.userid,
     }
   );
 
@@ -89,11 +89,10 @@ export default function HomeLayout() {
     mutate,
     data: response_line,
     isLoading,
-    // error: mutate_line_error,
   } = useMutation({
     mutationFn: async (unit: { IDUNIDADE: number }) => {
       const response = await api.get<OptionLineProps[]>(
-        getLineAll(credential ? credential.userid : 0, unit.IDUNIDADE)
+        getLineAll(credential?.userid, unit.IDUNIDADE)
       );
 
       return response.data;
@@ -122,7 +121,6 @@ export default function HomeLayout() {
           <Header.YStack>
             <Header.Options
               type="filter"
-              // disabled={modalVisible}
               onPress={bottomSheetModalRefShow.current?.handlePresentModalPress}
             />
             {/* <Header.Options type="att" /> */}

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "icep-mobile",
-    "slug": "icep-mobile",
+    "name": "iCep v3",
+    "slug": "iCep v3",
+    "displayName":"iCep v3",
     "scheme": "icep-mobile",
     "version": "1.0.0",
     "orientation": "portrait",

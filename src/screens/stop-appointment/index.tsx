@@ -13,6 +13,8 @@ import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import { format } from 'date-fns';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
+import { formatDate } from 'util/functions/formatDate';
+import { removeHourZeros } from 'util/functions/functionHours';
 
 import { getAllDataURL, postDataURL, putCancelURL } from './api-urls';
 import { CardStop } from './components/CardStop';
@@ -166,13 +168,17 @@ export default function StopAppointmentLayout() {
           <CardStop.XStack>
             <CardStop.DataText
               title="Início: "
-              text={`${item.DATAINIPARADA} ${item.HORAINIPARADA}`}
+              text={`${formatDate(item.DATAINIPARADA)} ${removeHourZeros(
+                item.HORAINIPARADA
+              )}`}
             />
           </CardStop.XStack>
           <CardStop.XStack>
             <CardStop.DataText
               title="Fim "
-              text={`${item.DATAFIMPARADA} ${item.HORAFIMPARADA}`}
+              text={`${formatDate(item.DATAFIMPARADA)} ${removeHourZeros(
+                item.HORAFIMPARADA
+              )}`}
             />
           </CardStop.XStack>
         </CardStop.YStack>

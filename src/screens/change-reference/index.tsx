@@ -12,6 +12,8 @@ import { Feather } from '@expo/vector-icons';
 import { Link, useNavigation } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
+import { formatDate } from 'util/functions/formatDate';
+import { removeHourZeros } from 'util/functions/functionHours';
 
 import { getChangeReferenceURL } from './api-urls';
 import { CardRef } from './components/CardRef';
@@ -190,14 +192,18 @@ export default function ChangeReferenceLayout() {
               <TextInput.Wrapper label="Data/Hora Inicio">
                 <TextInput.Content
                   editable={false}
-                  value={`${filteredItem[0]?.DATAINIPRODLINHA} ${filteredItem[0]?.HORAINIPRODLINHA}`}
+                  value={`${formatDate(
+                    filteredItem[0]?.DATAINIPRODLINHA
+                  )} ${removeHourZeros(filteredItem[0]?.HORAINIPRODLINHA)}`}
                 />
               </TextInput.Wrapper>
               <TextInput.Wrapper label="Data/Hora Fim">
                 <TextInput.Content
                   editable={false}
-                  value={`${filteredItem[0]?.DATAFIMPRODLINHA || ''} ${
-                    filteredItem[0]?.HORAFIMPRODLINHA || ''
+                  value={`${
+                    formatDate(filteredItem[0]?.DATAFIMPRODLINHA) || ''
+                  } ${
+                    removeHourZeros(filteredItem[0]?.HORAFIMPRODLINHA) || ''
                   }`}
                 />
               </TextInput.Wrapper>
