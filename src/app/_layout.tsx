@@ -30,7 +30,24 @@ export default function GlobalLayout() {
             >
               <View>
                 <BottomSheetModalProvider>
-                  <Stack screenOptions={{ headerShown: false }} />
+                  <Stack
+                    screenOptions={{
+                      headerShadowVisible: false,
+                      headerShown: false,
+                      contentStyle: {
+                        backgroundColor: '#f7fafc',
+                      },
+                      headerStyle: {
+                        backgroundColor: '#f7fafc',
+                      },
+                      title: '',
+                    }}
+                  >
+                    <Stack.Screen
+                      name="(auth)/config"
+                      options={{ headerShown: true }}
+                    />
+                  </Stack>
                 </BottomSheetModalProvider>
               </View>
             </TouchableWithoutFeedback>

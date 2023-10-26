@@ -8,7 +8,7 @@ type WrapperIndexProps = {
 
 const Wrapper = styled.View<WrapperIndexProps>`
   flex: 1;
-  justify-content: space-evenly;
+  gap: 16px;
   align-items: center;
   padding: ${({ insets }) => insets.top}px ${({ theme }) => theme.spacings[20]};
 `;

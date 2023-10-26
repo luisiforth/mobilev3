@@ -75,7 +75,7 @@ export const useTokenStore = create<StorageTokenProps>()(
 export const useEndPointStore = create<StorageEndPointProps>()(
   persist(
     (set) => ({
-      endpoint: 'https://nginx.iforth.com.br:39105/',
+      endpoint: '',
       setEndPoint: (endpoint) => set({ endpoint: endpoint }),
     }),
     {

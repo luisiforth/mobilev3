@@ -53,16 +53,16 @@ export default function LoginLayout() {
   return (
     <>
       <S.Root.WrapperIndex insets={insets}>
-        <View>
+        <View style={{ alignSelf: 'flex-start' }}>
           <Feather
-            name={'corner-left-down'}
+            name={'settings'}
             onPress={() => router.push('/config')}
             size={24}
             color={'black'}
           />
         </View>
         <Image
-          style={{ width: 400, height: 300, marginTop: -40, marginBottom: -80 }}
+          style={{ width: 400, height: 300, marginBottom: -80 }}
           source={require('./logo.png')}
         />
         <Card.Wrapper>
