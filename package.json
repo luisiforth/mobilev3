@@ -24,6 +24,7 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native": "^4.1.0",
     "expo": "~49.0.10",
+    "expo-av": "~13.4.1",
     "expo-camera": "~13.4.4",
     "expo-constants": "~14.4.2",
     "expo-file-system": "~15.4.4",

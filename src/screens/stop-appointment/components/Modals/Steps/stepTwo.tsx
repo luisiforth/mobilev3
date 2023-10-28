@@ -4,6 +4,7 @@ import { Pressable } from 'react-native';
 
 import { ControlledDateTime } from '@/components/ControlledDateTime';
 import { ControlledInput } from '@/components/ControlledInput';
+import { ControlledInputModal } from '@/components/ControlledInputModal';
 import { TextInput } from '@/components/TextInput';
 // import { useOnRequired } from '@/hooks/useOnRequired';
 import { addMinutes, format, parseISO } from 'date-fns';
@@ -171,7 +172,7 @@ export const StepTwo = ({ methods }: StepProps) => {
         />
       </TextInput.Wrapper>
       <TextInput.Wrapper label="Observação">
-        <ControlledInput
+        <ControlledInputModal
           control={methods.control}
           name="observation"
           multiline

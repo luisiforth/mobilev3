@@ -121,7 +121,7 @@ export default function ChangeReferenceProductLayout({
 
   const handleSubmit = async () => {
     Alert.alert(
-      'Deseja realizar está ação ?',
+      'Deseja realizar esta ação ?',
       'Deseja realmente trocar/pausar produto?',
       [
         { text: 'Sim', onPress: () => handleFetch() },

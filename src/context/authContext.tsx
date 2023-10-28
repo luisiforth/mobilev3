@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 
 import { useProtectedRouter } from '@/hooks/useProtectedRouter';
@@ -32,7 +32,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { setFilter } = useFilterStore();
   // const [userToken, setUserToken] = useState(token);
   useProtectedRouter(token);
-  // console.log(token);
   function updateToken(token: string) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
     setToken(token);
@@ -63,8 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        Alert.alert('', `Usuário ou senha inválidos`);
-        console.log(error.toJSON());
+        return Alert.alert('', `Usuário ou senha inválidos`);
       }
 
       Alert.alert('', `Usuário ou senha inválidos`);

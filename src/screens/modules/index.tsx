@@ -32,7 +32,6 @@ export default function HomeLayout() {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-
   const {
     control,
     handleSubmit,
@@ -116,12 +115,8 @@ export default function HomeLayout() {
               type="filter"
               onPress={bottomSheetModalRefShow.current?.handlePresentModalPress}
             />
-            {/* <Header.Options type="att" /> */}
-            <Search placeholder="Buscar ..." />
-            {/* <Header.Options
-              type="logout"
-              onPress={() => (setUser(null), navigation.navigate('/'))}
-            /> */}
+
+            {/* <Search placeholder="Buscar ..." /> */}
             <Header.Options type="menu" />
           </Header.YStack>
           <Header.YStack>

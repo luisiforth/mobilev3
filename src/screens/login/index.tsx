@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { Alert, Image, View } from 'react-native';
+import { Alert, Image, View, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import Button from '@/components/Button';
@@ -8,9 +8,11 @@ import { Card } from '@/components/Card';
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';
 import { useAuth } from '@/hooks/useAuth';
+import { useEndPointStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { router } from 'expo-router';
+import { api } from 'util/axios/axios';
 
 import { schema } from './schema';
 
@@ -25,7 +27,7 @@ export default function LoginLayout() {
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-
+  const { endpoint } = useEndPointStore();
   const {
     handleSubmit,
     formState: { errors },
@@ -60,9 +62,10 @@ export default function LoginLayout() {
             size={24}
             color={'black'}
           />
+          <Text> {api.defaults.baseURL + ''}</Text>
         </View>
         <Image
-          style={{ width: 400, height: 300, marginBottom: -80 }}
+          style={{ width: 400, height: 240 }}
           source={require('./logo.png')}
         />
         <Card.Wrapper>
@@ -103,8 +106,13 @@ export default function LoginLayout() {
             <Button
               text="Entrar"
               onPress={handleSubmit(onSubmit)}
-              isLoading={isLoading}
+              isLoading={isLoading || !endpoint}
             />
+            {!endpoint && (
+              <Text style={{ color: 'red', textAlign: 'center' }}>
+                * Favor informar uma rota para o uso da aplicação
+              </Text>
+            )}
           </Card.Container>
         </Card.Wrapper>
       </S.Root.WrapperIndex>

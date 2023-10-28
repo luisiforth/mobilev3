@@ -46,12 +46,14 @@ const Title = styled.Text`
 
 type WrapperIconProps = {
   isInactivatedItem: boolean;
+  flexWidthI: boolean;
 };
 
 const WrapperIcon = styled.View<WrapperIconProps>`
   border-radius: ${({ theme }) => theme.border.radius[6]};
   align-items: center;
   justify-content: center;
+  width: ${({ flexWidthI }) => (flexWidthI ? 'auto' : '100px')};
   background: ${({ isInactivatedItem, theme }) =>
     isInactivatedItem ? theme.colors.orange['500/50'] : 'white'};
   border: 1px solid

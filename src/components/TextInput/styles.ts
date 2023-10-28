@@ -1,3 +1,4 @@
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import styled from 'styled-components/native';
 
 const Wrapper = styled.View`
@@ -38,11 +39,23 @@ const Input = styled.TextInput`
       focusable ? theme.colors.primary.ring : theme.colors.black};
   color: ${({ theme }) => theme.colors.black};
 `;
+const InputModal = styled(BottomSheetTextInput)`
+  width: 100%;
+  position: relative;
+  padding: 10px;
+  border-radius: ${({ theme }) => theme.border.radius[4]};
+  font-size: 16px;
+  border: ${({ focusable }) => (focusable ? '2px' : '1px')} solid
+    ${({ theme, focusable }) =>
+      focusable ? theme.colors.primary.ring : theme.colors.black};
+  color: ${({ theme }) => theme.colors.black};
+`;
 
 export const Root = {
   ContentWrapper: ContentWrapper,
   Error: Error,
   Icon: Icon,
+  InputModal: InputModal,
   Input: Input,
   Text: Text,
   Wrapper: Wrapper,

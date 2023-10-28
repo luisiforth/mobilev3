@@ -41,6 +41,11 @@ const Touchable = styled.TouchableOpacity`
   border: 3px dashed ${({ theme }) => theme.colors.primary[300]};
 `;
 
+const WrapperModal = styled.View`
+  padding: ${({ theme }) => theme.spacings[20]};
+  gap: ${({ theme }) => theme.spacings[10]};
+`;
+
 export const Root = {
   ContainerRenderItem: ContainerRenderItem,
   ContainerRenderItemText: ContainerRenderItemText,
@@ -48,6 +53,7 @@ export const Root = {
   Text: Text,
   Touchable: Touchable,
   Wrapper: Wrapper,
+  WrapperModal: WrapperModal,
   WrapperFlatList: WrapperFlatList,
   WrapperSteps: WrapperSteps,
   // BarTop: BarTop

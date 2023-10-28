@@ -230,6 +230,7 @@ export default function StopAppointmentLayout() {
                 <S.Root.WrapperModal>
                   <TextInput.Wrapper label="Status" />
                   <CardStop.Icon
+                    flex
                     isInactivatedItem={handleInactive(
                       filterValue[0]?.FLAGPARADA
                     )}
@@ -247,7 +248,7 @@ export default function StopAppointmentLayout() {
                       value={filterValue[0]?.DESCMOTIVOPARADA}
                     />
                   </TextInput.Wrapper>
-                  <TextInput.Wrapper label="Data/Hora Inicio">
+                  <TextInput.Wrapper label="Data/Hora início">
                     <TextInput.Content
                       editable={false}
                       value={`${formatDate(

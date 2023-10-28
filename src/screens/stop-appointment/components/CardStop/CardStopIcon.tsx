@@ -9,6 +9,7 @@ export type Href = Record<'pathname', string>;
 
 type InputProps = {
   isInactivatedItem?: boolean;
+  flex?: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onPress?: (value?: any) => void;
 };
@@ -16,6 +17,7 @@ type InputProps = {
 export default function CardStopIcon({
   isInactivatedItem = false,
   onPress,
+  flex,
 }: InputProps) {
   const theme = useTheme();
 
@@ -28,7 +30,7 @@ export default function CardStopIcon({
 
   return (
     //@ts-ignore
-    <S.Root.WrapperIcon isInactivatedItem={isInactivatedItem}>
+    <S.Root.WrapperIcon flexWidthI={flex} isInactivatedItem={isInactivatedItem}>
       <Feather
         onPress={onPress}
         name={isInactivatedItem ? 'x' : 'check'}

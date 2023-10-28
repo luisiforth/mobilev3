@@ -23,7 +23,7 @@ export default function HomeLayout() {
           drawerIcon: ({ color, size }) => (
             <Feather name="airplay" color={color} size={size} />
           ),
-          title: 'Modulos',
+          title: 'Módulos',
           unmountOnBlur: true,
         }}
       />

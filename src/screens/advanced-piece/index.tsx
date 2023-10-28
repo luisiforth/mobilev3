@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FlatList, Text, View, Alert } from 'react-native';
 import { RefreshControl } from 'react-native';
@@ -12,7 +12,7 @@ import StepModal from '@/components/StepModal';
 import useRealmCrud from '@/hooks/useCrud';
 import { useNetInfo } from '@/hooks/useNetInfo';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
-import { Link } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
 import { Historic_advanced_piece } from 'util/realm/schema/historic_advanced_piece';
@@ -27,16 +27,18 @@ export default function AdvancedPieceLayout() {
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
   const [refreshing, setRefreshing] = useState(true);
   const theme = useTheme();
-  const isConnected = useNetInfo(); // PEGAR O OFFLINE OU ONLINE
+  const isConnected = useNetInfo();
+  const navigation = useNavigation();
   const { filters } = useFilterStore();
   const { credential } = useCredentialStore();
-  // ABRR CONEXÃO COM O BANCO
   const { queryRealm, deleteRecord, createRecord, deleteAll } = useRealmCrud(
     'historic_advanced_piece',
     //@ts-ignore
     Historic_advanced_piece.generate
   );
-  const dataFromRealm = queryRealm()?.toJSON(); // DADOS DO BANCO
+
+  const dataFromRealm = queryRealm()?.toJSON();
+  // console.log(dataFromRealm);
 
   const { mutate: postMutation } = useMutation(
     async (item: { _id: string }) => {
@@ -61,9 +63,13 @@ export default function AdvancedPieceLayout() {
     }
   );
 
-  const { data, isLoading, refetch, isRefetching } = useQuery(
+  const { data, isLoading, refetch, isRefetching, error } = useQuery(
     ['query_piece', isConnected, dataFromRealm, filters],
     async () => {
+      if (filters == null) {
+        return [];
+      }
+
       if (dataFromRealm == undefined) {
         Alert.alert(
           'Ocorreu um erro',
@@ -82,12 +88,11 @@ export default function AdvancedPieceLayout() {
         return data_realm;
       }
 
-      if (filters == null) {
-        return [];
-      }
-
       const request = await api.get(
-        getAdvPiece(filters.unit.value as number, filters.line.value)
+        getAdvPiece(
+          filters.unit?.value as number,
+          filters.line?.value as number
+        )
       );
 
       if (request.status != 200) {
@@ -104,34 +109,52 @@ export default function AdvancedPieceLayout() {
       return data_array;
     }
   );
+  // console.log(data);
+  function sleep(milliseconds: number) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  }
 
-  useEffect(() => {
-    if (
-      !isLoading &&
-      isConnected &&
-      dataFromRealm &&
-      dataFromRealm.length > 0
-    ) {
-      Alert.alert(
-        'Vimos que possuem dados não sincronizados.',
-        'Desejas sincronizar este dados ?',
-        [
-          {
-            text: 'Sim',
-            onPress: async () => {
-              const result = await api.post(postAdvPiece(), dataFromRealm);
-              deleteAll();
-              if (result.status == 200) return refetch();
-            },
-          },
-          {
-            style: 'cancel',
-            text: 'Cancel',
-          },
-        ]
-      );
+  const handleSubmitDatas = async () => {
+    setRefreshing(true);
+    // console.log(dataFromRealm);
+    // if (dataFromRealm) return Alert.alert('', 'Erro ao sincronizar');
+    const result = await api.post(postAdvPiece(), dataFromRealm);
+    await sleep(1000);
+    deleteAll();
+    if (result.status == 200) Alert.alert('', 'Dados enviados com sucesso');
+    return refetch();
+  };
+
+  const handleDelete = async (item: string) => {
+    await Alert.alert('', 'Deseja cancelar este registro ?', [
+      {
+        text: 'Sim',
+        onPress: () => deleteRecord(item),
+      },
+      {
+        text: 'Não',
+        style: 'cancel',
+      },
+    ]);
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          isConnected && (
+            <CardCep.Icon icon="refresh-ccw" onPress={handleSubmitDatas} />
+          )
+        );
+      },
+    });
+
+    if (isConnected && dataFromRealm?.length) {
+      return Alert.alert('', 'Você possui dados a serem sincronizados.');
     }
-  }, [isConnected]);
+
+    console.log('render');
+  }, [navigation, isConnected]);
 
   function RenderItem({ item, index }: renderItemProps) {
     const id = item?.FLAG ? item._id : item.ID;
@@ -162,7 +185,7 @@ export default function AdvancedPieceLayout() {
           {item?.FLAG && (
             <>
               <CardCep.Icon
-                onPress={() => deleteRecord(item._id)}
+                onPress={() => handleDelete(item._id)}
                 icon="trash-2"
               />
               {isConnected && (
@@ -189,8 +212,8 @@ export default function AdvancedPieceLayout() {
 
     const body = {
       IDUSUARIO: credential?.userid, //Alterar para o usuário LOGADO.
-      IDUNIDADE: filters.unit.value,
-      IDLINHA: filters.line.value,
+      IDUNIDADE: filters.unit?.value,
+      IDLINHA: filters.line?.value,
       IDDEFEITO: data.defect.value,
       DESCDEFEITO: data.defect.label,
       DEFORMADOCEPPECAADIANTADA: data.deformity.value,
@@ -204,6 +227,7 @@ export default function AdvancedPieceLayout() {
     };
 
     if (!isConnected) {
+      console.log('TESTE ?');
       createRecord(body);
       return refetch();
     }
@@ -228,7 +252,7 @@ export default function AdvancedPieceLayout() {
 
   return (
     <S.Root.Wrapper>
-      {isLoading || isRefetching ? (
+      {isLoading || refreshing || isRefetching ? (
         <Loading />
       ) : (
         <>
@@ -255,11 +279,13 @@ export default function AdvancedPieceLayout() {
             }
           />
           <Modal snapPoints={['80%', '80%']} ref={bottomSheetModalRef}>
-            <StepModal
-              onSubmit={onSubmit}
-              schema={schema}
-              steps={[StepCamera, StepOne, StepTwo]}
-            />
+            <S.Root.WrapperModal>
+              <StepModal
+                onSubmit={onSubmit}
+                schema={schema}
+                steps={[StepCamera, StepOne, StepTwo]}
+              />
+            </S.Root.WrapperModal>
           </Modal>
         </>
       )}
