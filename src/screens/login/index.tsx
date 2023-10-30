@@ -62,7 +62,7 @@ export default function LoginLayout() {
             size={24}
             color={'black'}
           />
-          <Text> {api.defaults.baseURL + ''}</Text>
+          {/* <Text> {api.defaults.baseURL + ''}</Text> */}
         </View>
         <Image
           style={{ width: 400, height: 240 }}
