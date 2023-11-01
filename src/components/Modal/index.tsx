@@ -8,6 +8,7 @@ import {
 } from 'react';
 
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { useTheme } from 'styled-components/native';
 
 export type ComportModalProps = {
   handlePresentModalPress: () => void;
@@ -27,6 +28,7 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
   ref
 ) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const theme = useTheme();
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
@@ -57,6 +59,9 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
 
   return (
     <BottomSheetModal
+      handleIndicatorStyle={{
+        backgroundColor: theme.colors.gray['400'],
+      }}
       ref={bottomSheetModalRef}
       index={1}
       backdropComponent={handleRenderBackDrop}

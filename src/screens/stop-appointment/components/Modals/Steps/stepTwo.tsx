@@ -21,21 +21,13 @@ interface StepProps {
 
 export const StepTwo = ({ methods }: StepProps) => {
   const [differenceInMinutes, setDifferenceInMinutes] = useState<Date>();
-  // new Date()
-
   const [finalHour, setFinalHour] = useState<Date>(new Date());
-  const [visibleDateInitial, setVisibleDateInitial] = useState(false);
-  const [visibleDateEnd, setVisibleDateEnd] = useState(false);
-  const [visibleTimeInitial, setVisibleTimeInitial] = useState(false);
-  const [visibleTimeFinal, setVisibleTimeFinal] = useState(false);
-
-  const onChangeDateInitial = () => {
-    return showDateInitial();
-  };
-
-  const onChangeDateEnd = () => {
-    return showDateEnd();
-  };
+  const [visibility, setVisibility] = useState({
+    dateInitial: false,
+    dateEnd: false,
+    timeInitial: false,
+    timeFinal: false,
+  });
 
   const formatHourToPtBR = (date: Date) => {
     return (
@@ -60,14 +52,14 @@ export const StepTwo = ({ methods }: StepProps) => {
 
   const handleHoursDiff = () => {
     setDifferenceInMinutes(undefined);
-    const initialHour = methods.getValues('initialHour') || new Date(); // Converter o valor para um objeto Date
-    const finalHour = methods.getValues('finalHour') || new Date(); // Converter o valor para um objeto Date
+    const initialHour = methods.getValues('initialHour') || new Date();
+    const finalHour = methods.getValues('finalHour') || new Date();
     if (!isNaN(initialHour) && !isNaN(finalHour)) {
-      const diffMilliseconds = finalHour - initialHour; // Diferença em milissegundos
-      const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60)); // Diferença em minutos
-      return methods.setValue('timeInMinutes', diffMinutes.toString());
+      const diffMilliseconds = finalHour - initialHour;
+      const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
+      methods.setValue('timeInMinutes', diffMinutes.toString());
     } else {
-      return methods.setValue('timeInMinutes', '0');
+      methods.setValue('timeInMinutes', '0');
     }
   };
 
@@ -77,55 +69,42 @@ export const StepTwo = ({ methods }: StepProps) => {
   }, [differenceInMinutes]);
 
   const updateTimeInputs = (difference: number) => {
-    if (isNaN(difference)) return;
+    if (!isNaN(difference)) {
+      const dateInit = format(
+        methods.getValues('initialHour') || new Date(),
+        'yyyy-MM-dd'
+      );
+      const timeInitial =
+        methods.getValues('initialHour') || formatHourToPtBR(new Date());
+      const newEndTime = addMinutes(
+        parseISO(`${dateInit}T${timeInitial}`),
+        difference
+      );
 
-    const dateInit = format(
-      methods.getValues('initialHour') || new Date(),
-      'yyyy-MM-dd'
-    );
-    const timeInitial =
-      methods.getValues('initialHour') || formatHourToPtBR(new Date());
-    const newEndTime = addMinutes(
-      parseISO(`${dateInit}T${timeInitial}`),
-      difference
-    );
-
-    if (newEndTime) {
-      setDifferenceInMinutes(newEndTime);
+      if (newEndTime) {
+        setDifferenceInMinutes(newEndTime);
+      }
     }
   };
 
-  const onChangeTimeInitial = () => {
-    handleHoursDiff();
-    return showTimeInitial();
+  const toggleAndHandle = (
+    key: keyof typeof visibility,
+    handleFunction?: () => void
+  ) => {
+    toggleVisibility(key);
+    if (handleFunction) {
+      handleFunction();
+    }
   };
 
-  const onChangeTimeEnd = () => {
-    setFinalHour(methods.getValues('finalHour'));
-    handleHoursDiff();
-    return showTimeFinal();
+  const toggleVisibility = (key: keyof typeof visibility) => {
+    setVisibility((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
-  const showDateInitial = useCallback(() => {
-    setVisibleDateInitial(!visibleDateInitial);
-  }, [visibleDateInitial]);
-
-  const showDateEnd = useCallback(() => {
-    setVisibleDateEnd(!visibleDateEnd);
-  }, [visibleDateEnd]);
-
-  const showTimeInitial = useCallback(() => {
-    setVisibleTimeInitial(!visibleTimeInitial);
-  }, [visibleTimeInitial]);
-
-  const showTimeFinal = useCallback(() => {
-    setVisibleTimeFinal(!visibleTimeFinal);
-  }, [visibleTimeFinal]);
 
   return (
     <S.Root.WrapperSteps>
       <S.Root.Container>
-        <Pressable onPress={showDateInitial}>
+        <Pressable onPress={() => toggleVisibility('dateInitial')}>
           <TextInput.Wrapper label="Data inicial">
             <TextInput.Content
               value={validDateValue(methods.getValues('initialDate'))}
@@ -133,7 +112,7 @@ export const StepTwo = ({ methods }: StepProps) => {
             />
           </TextInput.Wrapper>
         </Pressable>
-        <Pressable onPress={showTimeInitial}>
+        <Pressable onPress={() => toggleVisibility('timeInitial')}>
           <TextInput.Wrapper label="Hora inicial">
             <TextInput.Content
               value={validHourValue(methods.getValues('initialHour')) as string}
@@ -143,7 +122,7 @@ export const StepTwo = ({ methods }: StepProps) => {
         </Pressable>
       </S.Root.Container>
       <S.Root.Container>
-        <Pressable onPress={showDateEnd}>
+        <Pressable onPress={() => toggleVisibility('dateEnd')}>
           <TextInput.Wrapper label="Data final">
             <TextInput.Content
               value={validDateValue(methods.getValues('finalDate'))}
@@ -151,7 +130,7 @@ export const StepTwo = ({ methods }: StepProps) => {
             />
           </TextInput.Wrapper>
         </Pressable>
-        <Pressable onPress={showTimeFinal}>
+        <Pressable onPress={() => toggleVisibility('timeFinal')}>
           <TextInput.Wrapper label="Hora final">
             <TextInput.Content
               value={validHourValue(finalHour) as string}
@@ -161,12 +140,10 @@ export const StepTwo = ({ methods }: StepProps) => {
         </Pressable>
       </S.Root.Container>
       <TextInput.Wrapper label="Tempo em minutos">
-        {/* <TextInput.Content value={timeInMinutes} editable={false} /> */}
         <ControlledInput
           inputMode="numeric"
           control={methods.control}
           defaultValue={'0'}
-          // value={timeInMinutes}
           onValueChanged={updateTimeInputs}
           name="timeInMinutes"
         />
@@ -178,45 +155,33 @@ export const StepTwo = ({ methods }: StepProps) => {
           multiline
         />
       </TextInput.Wrapper>
-      {visibleDateInitial && (
-        <ControlledDateTime
-          control={methods.control}
-          name="initialDate"
-          onChangeDate={onChangeDateInitial}
-          maximumDate={new Date()}
-          mode="date"
-          // value={date}
-        />
-      )}
-      {visibleDateEnd && (
+      {visibility.dateEnd && (
         <ControlledDateTime
           control={methods.control}
           maximumDate={methods.getValues('initialDate') || new Date()}
           name="finalDate"
-          onChangeDate={onChangeDateEnd}
-          // maximumDate={new Date()}
+          onChangeDate={() => toggleVisibility('dateEnd')}
           mode="date"
-          // value={date}
         />
       )}
-      {visibleTimeInitial && (
+      {visibility.timeInitial && (
         <ControlledDateTime
           control={methods.control}
           name="initialHour"
-          onChangeDate={onChangeTimeInitial}
-          // maximumDate={new Date()}
+          onChangeDate={() => toggleAndHandle('timeInitial')}
           mode="time"
-          // value={date}
         />
       )}
-      {visibleTimeFinal && (
+      {visibility.timeFinal && (
         <ControlledDateTime
           control={methods.control}
           name="finalHour"
-          onChangeDate={onChangeTimeEnd}
-          // maximumDate={new Date()}
+          onChangeDate={() =>
+            toggleAndHandle('timeFinal', () =>
+              setFinalHour(methods.getValues('finalHour'), handleHoursDiff())
+            )
+          }
           mode="time"
-          // value={date}
         />
       )}
     </S.Root.WrapperSteps>

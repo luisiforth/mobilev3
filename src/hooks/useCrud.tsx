@@ -5,9 +5,9 @@ import { useRealm, useQuery } from 'util/realm';
 
 type GenerateFunction<T> = (data: any) => T;
 
-const handleError = (error: Error) => {
+const handleError = (error: Error, title: string) => {
   Alert.alert(
-    'Erro',
+    `Erro ${title}`,
     `Informe o erro ao administrador do sistema:\n\n${error}`
   );
 };
@@ -25,7 +25,7 @@ const useRealmCrud = <T extends Partial<Realm.Object>>(
         realm.create(tableName, generate(data));
       });
     } catch (error: any) {
-      handleError(error);
+      handleError(error, 'Cadastro');
     }
   };
 
@@ -38,7 +38,7 @@ const useRealmCrud = <T extends Partial<Realm.Object>>(
         });
       }
     } catch (error: any) {
-      handleError(error);
+      handleError(error, 'delete');
     }
   };
 
@@ -49,7 +49,7 @@ const useRealmCrud = <T extends Partial<Realm.Object>>(
         realm.delete(allRecords);
       });
     } catch (error: any) {
-      handleError(error);
+      handleError(error, 'delete todos');
     }
   };
 
@@ -57,7 +57,7 @@ const useRealmCrud = <T extends Partial<Realm.Object>>(
     try {
       return realm.objectForPrimaryKey(tableName, new BSON.UUID(id));
     } catch (error: any) {
-      handleError(error);
+      handleError(error, 'encontra item');
     }
   };
 
@@ -65,7 +65,7 @@ const useRealmCrud = <T extends Partial<Realm.Object>>(
     try {
       return query;
     } catch (error: any) {
-      handleError(error);
+      handleError(error, 'busca');
     }
   };
 

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { FlatList, Text, View, Alert } from 'react-native';
 import { RefreshControl } from 'react-native';
@@ -43,7 +43,6 @@ export default function AdvancedPieceLayout() {
     data: dataFromRealm,
     isLoading: loadingRealm,
     refetch: refetchRealm,
-    error: isRerrorRealm,
   } = useQuery('query_realm', () => {
     const query = queryRealm();
     if (query == undefined) return;
@@ -161,7 +160,7 @@ export default function AdvancedPieceLayout() {
     ]);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
         return (
@@ -176,15 +175,11 @@ export default function AdvancedPieceLayout() {
         );
       },
     });
-
-    return () => {
-      console.log('render');
-      if (isConnected && dataFromRealm?.length) {
-        console.log('oi ?');
-        return Alert.alert('', 'Você possui dados a serem sincronizados.');
-      }
-    };
-  }, [dataFromRealm]);
+    if (isConnected && dataFromRealm?.length) {
+      console.log('oi ?');
+      return Alert.alert('', 'Você possui dados a serem sincronizados.');
+    }
+  }, [dataFromRealm, isConnected]);
 
   function RenderItem({ item, index }: renderItemProps) {
     const id = item?.FLAG ? item._id : item.ID;
@@ -264,32 +259,28 @@ export default function AdvancedPieceLayout() {
       return;
     }
 
-    const body = [
-      {
-        IDUSUARIO: credential?.userid, //Alterar para o usuário LOGADO.
-        IDUNIDADE: filters.unit?.value,
-        IDLINHA: filters.line?.value,
-        IDDEFEITO: data.defect.value,
-        DESCDEFEITO: data.defect.label,
-        DEFORMADOCEPPECAADIANTADA: data.deformity.value,
-        IMAGEM: data.images,
-        DIFTONCEPPECAADIANTADA: data.diff.value,
-        OBSCEPPECAADIANTADA: data.observation || ' ',
-        BRILHOCEPPECAADIANTADA: data.shine.value,
-        TEXTURACEPPECAADIANTADA: data.texture.value,
-        TOMCEPPECAADIANTADA: data.tom,
-        TONCEPPECAADIANTADA: data.tonality.value,
-      },
-    ];
-
+    const body = {
+      IDUSUARIO: credential?.userid, //Alterar para o usuário LOGADO.
+      IDUNIDADE: filters.unit?.value,
+      IDLINHA: filters.line?.value,
+      IDDEFEITO: data.defect.value,
+      DESCDEFEITO: data.defect.label,
+      DEFORMADOCEPPECAADIANTADA: data.deformity.value,
+      IMAGEM: data.images,
+      DIFTONCEPPECAADIANTADA: data.diff.value,
+      OBSCEPPECAADIANTADA: data.observation || ' ',
+      BRILHOCEPPECAADIANTADA: data.shine.value,
+      TEXTURACEPPECAADIANTADA: data.texture.value,
+      TOMCEPPECAADIANTADA: data.tom,
+      TONCEPPECAADIANTADA: data.tonality.value,
+    };
     if (!isConnected) {
-      console.log('TESTE ?');
       createRecord(body);
       return refetchRealm();
     }
 
     try {
-      await api.post(postAdvPiece(), body);
+      await api.post(postAdvPiece(), [body]);
       return refetch();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
