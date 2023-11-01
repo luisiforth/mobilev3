@@ -57,6 +57,7 @@ export default function ConfigPageLayout() {
           <>
             <TextInput.Wrapper label="Usuário">
               <TextInput.Content
+                autoCapitalize="none"
                 onChangeText={setUser}
                 placeholder="Informar usuário"
               />

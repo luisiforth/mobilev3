@@ -264,21 +264,24 @@ export default function AdvancedPieceLayout() {
       return;
     }
 
-    const body = {
-      IDUSUARIO: credential?.userid, //Alterar para o usuário LOGADO.
-      IDUNIDADE: filters.unit?.value,
-      IDLINHA: filters.line?.value,
-      IDDEFEITO: data.defect.value,
-      DESCDEFEITO: data.defect.label,
-      DEFORMADOCEPPECAADIANTADA: data.deformity.value,
-      IMAGEM: data.images,
-      DIFTONCEPPECAADIANTADA: data.diff.value,
-      OBSCEPPECAADIANTADA: data.observation || ' ',
-      BRILHOCEPPECAADIANTADA: data.shine.value,
-      TEXTURACEPPECAADIANTADA: data.texture.value,
-      TOMCEPPECAADIANTADA: data.tom,
-      TONCEPPECAADIANTADA: data.tonality.value,
-    };
+    const body = [
+      {
+        IDUSUARIO: credential?.userid, //Alterar para o usuário LOGADO.
+        IDUNIDADE: filters.unit?.value,
+        IDLINHA: filters.line?.value,
+        IDDEFEITO: data.defect.value,
+        DESCDEFEITO: data.defect.label,
+        DEFORMADOCEPPECAADIANTADA: data.deformity.value,
+        IMAGEM: data.images,
+        DIFTONCEPPECAADIANTADA: data.diff.value,
+        OBSCEPPECAADIANTADA: data.observation || ' ',
+        BRILHOCEPPECAADIANTADA: data.shine.value,
+        TEXTURACEPPECAADIANTADA: data.texture.value,
+        TOMCEPPECAADIANTADA: data.tom,
+        TONCEPPECAADIANTADA: data.tonality.value,
+      },
+    ];
+
     if (!isConnected) {
       console.log('TESTE ?');
       createRecord(body);
@@ -286,11 +289,12 @@ export default function AdvancedPieceLayout() {
     }
 
     try {
-      await api.post(postAdvPiece(), [body]);
+      await api.post(postAdvPiece(), body);
       return refetch();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+      console.log(error);
       return Alert.alert(
         'Ocorreu um erro no envio',
         `Contacte um administrador e informe o erro: ${error.message}.`
