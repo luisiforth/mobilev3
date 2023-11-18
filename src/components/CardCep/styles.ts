@@ -5,7 +5,7 @@ export type StyledProps = {
   onAsync: boolean;
 };
 
-export const Wrapper = styled.View<StyledProps>`
+export const Wrapper = styled.TouchableOpacity<StyledProps>`
   align-items: center;
   background-color: ${({ theme, onAsync }) =>
     !onAsync ? theme.colors.white[500] : theme.colors.orange['500/50']};

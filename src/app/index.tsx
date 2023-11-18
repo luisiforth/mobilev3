@@ -28,14 +28,17 @@ export function Splash({ onComplete }: Types) {
     setStatus(() => status);
   }
   return (
-    <Video
-      style={StyleSheet.absoluteFill}
-      resizeMode={ResizeMode.COVER}
-      source={require('../../assets/splash.mp4')}
-      isLooping={false}
-      onPlaybackStatusUpdate={onPlaybackStatusUpdate}
-      shouldPlay={true}
-    />
+    <>
+      <StatusBar hidden />
+      <Video
+        style={StyleSheet.absoluteFill}
+        resizeMode={ResizeMode.COVER}
+        source={require('../../assets/splash.mp4')}
+        isLooping={false}
+        onPlaybackStatusUpdate={onPlaybackStatusUpdate}
+        shouldPlay={true}
+      />
+    </>
   );
 }
 

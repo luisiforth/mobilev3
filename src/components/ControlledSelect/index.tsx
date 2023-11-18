@@ -1,8 +1,8 @@
 import React from 'react';
 import { Controller, Control } from 'react-hook-form';
+import { Keyboard } from 'react-native';
 
 import { Picker, PickerProps } from '@react-native-picker/picker';
-
 import { ItemValue } from '@react-native-picker/picker/typings/Picker';
 
 type Props = {
@@ -31,9 +31,11 @@ export function ControlledSelect({
       control={control}
       render={({ field: { onChange, value } }) => (
         <Picker
+          onFocus={() => Keyboard.dismiss()}
           selectedValue={value == undefined ? value : value.value}
           onValueChange={(val) => {
             const retorno = item.find((v) => val === v.value);
+
             onChange(retorno);
             if (onValueChanged) {
               onValueChanged(retorno);

@@ -1,7 +1,7 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
-// import { FieldValues, SubmitHandler } from 'react-hook-form';
-import { ActivityIndicator, Alert } from 'react-native';
-import { FlatList, View, Text } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
+import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { Alert } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
@@ -28,6 +28,17 @@ import {
 import { StoppedAppointmentRequest } from './types';
 
 import * as S from './styles';
+
+type TItem = {
+  item: {
+    FLAGPARADA: number;
+    IDPARADA: number;
+    DATAINIPARADA: string;
+    HORAINIPARADA: string;
+    DATAFIMPARADA: string;
+    HORAFIMPARADA: string;
+  };
+};
 
 export default function StopAppointmentLayout() {
   const { credential } = useCredentialStore();
@@ -58,11 +69,11 @@ export default function StopAppointmentLayout() {
     }
   );
 
-  useLayoutEffect(() => {}, []);
-
-  const onSubmit = async (data: typeof schema.fields) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     bottomSheetModalRefStep.current?.handleDismiss();
+
     if (!filters || !credential) return router.back();
+
     const body = {
       checkeficienciamotivoparada: 1,
       datafimparada: data.finalDate
@@ -98,9 +109,9 @@ export default function StopAppointmentLayout() {
     try {
       const response = await api.post(postDataURL(), body);
       if (response.status == 200) {
-        Alert.alert('', 'Enviado com sucesso.');
+        Alert.alert('', 'Enviado com sucesso!');
       }
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Erro:', err.message);
       console.log(err.message);
     }
@@ -131,22 +142,22 @@ export default function StopAppointmentLayout() {
 
   const handleCancel = async (id: number, flag: number) => {
     if (flag == 1) {
-      Alert.alert('Ação interrompida!', 'Não é possivel cancelar este dado');
+      Alert.alert('Ação interrompida!', 'Não é possivel cancelar este dado.');
       return bottomSheetModalRefShow.current?.handleDismiss();
     }
 
     Alert.alert(
-      'Deseja cancelar ?',
-      `Realmente deseja cancelar o registro n° ${id}`,
+      'Deseja cancelar?',
+      `Realmente deseja cancelar o registro n° ${id}?`,
       [
         {
           text: 'Sim',
           onPress: async () => {
             const response = await api.put(putCancelURL(id));
             if (response.status != 200) {
-              Alert.alert('', 'Deu algum erro');
+              Alert.alert('', 'Não foi possivel concluir a ação!');
             }
-            Alert.alert('', 'Registro cancelado com sucesso');
+            Alert.alert('', 'Registro cancelado com sucesso!');
             setFilterValue([]);
             refetch();
             return bottomSheetModalRefShow.current?.handleDismiss();
@@ -160,7 +171,7 @@ export default function StopAppointmentLayout() {
     );
   };
 
-  const RenderItem = ({ item }) => {
+  const RenderItem = ({ item }: TItem) => {
     return (
       <CardStop.Wrapper
         onPress={() => (setIsLoadingModal(true), handleFilter(item.IDPARADA))}
@@ -196,7 +207,7 @@ export default function StopAppointmentLayout() {
       ) : (
         <S.Root.Wrapper>
           <FlatList
-            data={data}
+            data={data as []}
             ItemSeparatorComponent={ListItemSeparator}
             renderItem={RenderItem}
           />
@@ -214,18 +225,7 @@ export default function StopAppointmentLayout() {
           <Modal snapPoints={snapPoints} ref={bottomSheetModalRefShow}>
             <>
               {isLoadingModal ? (
-                <View
-                  style={{
-                    alignItems: 'center',
-                    gap: 10,
-                  }}
-                >
-                  <ActivityIndicator
-                    color={theme.colors.primary[300]}
-                    size={40}
-                  />
-                  <Text>Carregando...</Text>
-                </View>
+                <Loading />
               ) : (
                 <S.Root.WrapperModal>
                   <TextInput.Wrapper label="Status" />
@@ -293,6 +293,7 @@ export default function StopAppointmentLayout() {
               )}
             </>
           </Modal>
+
           <Modal snapPoints={snapPointSteps} ref={bottomSheetModalRefStep}>
             <S.Root.WrapperModal>
               <StepModal

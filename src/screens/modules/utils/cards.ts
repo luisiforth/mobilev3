@@ -12,6 +12,6 @@ export const modules_data = [
   {
     icon: 'package',
     path: '/change_reference',
-    title: 'Troca Referencia',
+    title: 'Troca Referência',
   },
 ];

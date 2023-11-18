@@ -12,6 +12,8 @@ import { useEndPointStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { router } from 'expo-router';
+// import { api } from 'util/axios/axios';
+
 import { api } from 'util/axios/axios';
 
 import { schema } from './schema';
@@ -54,6 +56,7 @@ export default function LoginLayout() {
 
   return (
     <>
+      {/* @ts-ignore */}
       <S.Root.WrapperIndex insets={insets}>
         <View style={{ alignSelf: 'flex-start' }}>
           <Feather
@@ -62,7 +65,7 @@ export default function LoginLayout() {
             size={24}
             color={'black'}
           />
-          {/* <Text> {api.defaults.baseURL + ''}</Text> */}
+          <Text> {api.defaults.baseURL + ''}</Text>
         </View>
         <Image
           style={{ width: 400, height: 240 }}

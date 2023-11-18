@@ -7,7 +7,11 @@ import {
   useRef,
 } from 'react';
 
-import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetModalProps,
+} from '@gorhom/bottom-sheet';
 import { useTheme } from 'styled-components/native';
 
 export type ComportModalProps = {
@@ -21,10 +25,10 @@ export type ComportModalProps = {
 type ModalProps = {
   children: ReactNode;
   snapPoints?: string[];
-};
+} & BottomSheetModalProps;
 
 const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
-  { children, snapPoints = ['24%', '60%'] },
+  { children, snapPoints = ['24%', '60%'], ...props },
   ref
 ) => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -62,11 +66,11 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
       handleIndicatorStyle={{
         backgroundColor: theme.colors.gray['400'],
       }}
+      {...props}
       ref={bottomSheetModalRef}
       index={1}
       backdropComponent={handleRenderBackDrop}
       snapPoints={snapPoints}
-      enablePanDownToClose={true}
     >
       {children}
     </BottomSheetModal>

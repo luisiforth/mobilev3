@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldErrors, UseFormReturn } from 'react-hook-form';
 import { Pressable } from 'react-native';
 
@@ -23,10 +23,10 @@ export const StepTwo = ({ methods }: StepProps) => {
   const [differenceInMinutes, setDifferenceInMinutes] = useState<Date>();
   const [finalHour, setFinalHour] = useState<Date>(new Date());
   const [visibility, setVisibility] = useState({
-    dateInitial: false,
     dateEnd: false,
-    timeInitial: false,
+    dateInitial: false,
     timeFinal: false,
+    timeInitial: false,
   });
 
   const formatHourToPtBR = (date: Date) => {
@@ -64,7 +64,10 @@ export const StepTwo = ({ methods }: StepProps) => {
   };
 
   useEffect(() => {
-    methods.setValue('finalHour', differenceInMinutes);
+    methods.setValue(
+      'finalHour',
+      differenceInMinutes || methods.getValues('finalHour')
+    );
     setFinalHour(methods.getValues('finalHour'));
   }, [differenceInMinutes]);
 
@@ -92,6 +95,7 @@ export const StepTwo = ({ methods }: StepProps) => {
     handleFunction?: () => void
   ) => {
     toggleVisibility(key);
+    handleHoursDiff();
     if (handleFunction) {
       handleFunction();
     }
@@ -178,7 +182,7 @@ export const StepTwo = ({ methods }: StepProps) => {
           name="finalHour"
           onChangeDate={() =>
             toggleAndHandle('timeFinal', () =>
-              setFinalHour(methods.getValues('finalHour'), handleHoursDiff())
+              setFinalHour(methods.getValues('finalHour'))
             )
           }
           mode="time"

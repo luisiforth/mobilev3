@@ -33,7 +33,11 @@ export type StoppedAppointmentRequest = {
 
 export type Option_equipment = { DESCLINHA: string; IDLINHA: number };
 
-export type Option_product = { DESCFICHAPROD: string; IDFICHAPROD: number };
+export type Option_product = {
+  DESCFICHAPROD: string;
+  IDFICHAPROD: number;
+  REFFICHAPROD: number;
+};
 
 export type Option_type_stoppeds = {
   DESCTIPOPARADA: string;

@@ -3,9 +3,7 @@ export function getAllDataURL(
   line: number,
   initialDate: string,
   finalDate: string,
-  maxRegister: number,
-  page = '1',
-  size = '30'
+  maxRegister: number
 ) {
   return `/v1/util/parada/${unit}/${line}/${initialDate}/${finalDate}/${maxRegister}` as const;
 }

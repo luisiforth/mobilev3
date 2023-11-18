@@ -1,16 +1,27 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { TouchableOpacity } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import {
+  Button,
+  Dimensions,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  withSpring,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
-import MemoizedCameraCustom2 from '@/components/Camera/camera';
-import { CameraPreview } from '@/components/CameraPreview';
-import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import { useOnRequired } from '@/hooks/useOnRequired';
 import { Feather } from '@expo/vector-icons';
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { Image } from 'expo-image';
+import * as ImagePicker from 'expo-image-picker';
+import { useTheme } from 'styled-components/native';
 
 import * as S from '@/screens/advanced-piece/styles';
 
@@ -18,15 +29,26 @@ interface StepProps {
   methods: UseFormReturn;
   onRequired: (value?: unknown) => boolean;
 }
+const { width } = Dimensions.get('window');
 
 export const StepCamera = ({ methods, onRequired }: StepProps) => {
-  const image = methods.getValues().images;
+  const [image, setImage] = useState<string[]>(
+    methods.getValues('images') || []
+  );
+
   const [imageZoom, setImageZoom] = useState('');
+  const [permission, requestPermission] = ImagePicker.useCameraPermissions();
+
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
-  const bottomSheetModalRef2 = useRef<ComportModalProps>(null);
-  const snapPoints = useMemo(() => ['90%', '95%'], []);
-  const snapPoints2 = useMemo(() => ['70%', '85%'], []);
-  const [showSpinner, setShowSpinner] = useState(false);
+  const AnimatedTouchableOpacity =
+    Animated.createAnimatedComponent(TouchableOpacity);
+  const theme = useTheme();
+  const translateY = useSharedValue(100);
+  translateY.value = withSpring(0);
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
+  const snapPoints = useMemo(() => ['80%', '80%'], []);
 
   useOnRequired(['images'], {
     methods,
@@ -35,145 +57,167 @@ export const StepCamera = ({ methods, onRequired }: StepProps) => {
 
   const handleRemoveArrayImage = useCallback(
     (value: string) => {
+      // const newArray =
+      setImage(image.filter((element: string) => element !== value));
       methods.setValue(
         'images',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        image.filter((element: any) => element !== value)
+        image.filter((element: string) => element !== value)
       );
       return;
     },
     [image, methods]
   );
+
   const handleImageZoom = useCallback(
     (value: string) => {
       setImageZoom(value);
 
-      return bottomSheetModalRef2.current?.handlePresentModalPress();
+      return bottomSheetModalRef.current?.handlePresentModalPress();
     },
     [imageZoom]
   );
-  const handleOpen = useCallback(() => {
-    setTimeout(() => {
-      setShowSpinner(false);
-    }, 1000);
-    setShowSpinner(true);
-    bottomSheetModalRef.current?.handlePresentModalPress();
-  }, []);
+
+  const handleOpenCamera = useCallback(async () => {
+    if (image && image?.length === 3) return;
+    translateY.value = withSpring(0);
+    const camera = await ImagePicker.launchCameraAsync({
+      // allowsEditing: true,
+      base64: true,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    });
+
+    methods.setValue('images', image);
+    if (!camera.canceled) {
+      setImage((prev) => [...prev, camera.assets[0].uri]);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    setTimeout(() => methods.setValue('images', image), 0);
+    if (image.length == 3) translateY.value = withSpring(100);
+  }, [image]);
+
+  if (permission?.status !== ImagePicker.PermissionStatus.GRANTED) {
+    return <Button title="Dar permissão" onPress={requestPermission} />;
+  }
 
   return (
     <S.Root.WrapperSteps>
-      {image?.length > 0 ? (
-        image.length == 1 ? (
-          <>
-            <Feather
-              name={'camera'}
-              style={{ alignSelf: 'flex-end', marginRight: 10 }}
-              size={25}
-              onPress={handleOpen}
-              color={'black'}
-            />
-
-            <TouchableOpacity
-              style={{
-                alignItems: 'center',
-                padding: 10,
-                justifyContent: 'center',
-              }}
-              onPress={() => handleImageZoom(image[0])}
-              activeOpacity={1}
-            >
-              <CameraPreview.Icon
-                icon="x"
-                hitSlop={20}
-                onPress={() => handleRemoveArrayImage(image[0] as string)}
-              />
-              <CameraPreview.Content image={image[0] as string} />
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            {image.length < 3 && (
-              <Feather
-                name={'camera'}
-                style={{ alignSelf: 'flex-end', marginRight: 10 }}
-                size={25}
-                onPress={handleOpen}
-                color={'black'}
-              />
-            )}
-            <Carousel
-              width={283}
-              height={400}
-              mode="parallax"
-              style={{
-                alignContent: 'center',
-                justifyContent: 'center',
-                width: '100%',
-              }}
-              data={image}
-              renderItem={({ item }) => {
-                return (
-                  <>
-                    <TouchableOpacity
-                      activeOpacity={1}
-                      onPress={() => handleImageZoom(item as string)}
-                    >
-                      <CameraPreview.Icon
-                        icon="x"
-                        hitSlop={20}
-                        onPress={() => handleRemoveArrayImage(item as string)}
-                      />
-                      <CameraPreview.Content image={item as string} />
-                    </TouchableOpacity>
-                  </>
-                );
-              }}
-            />
-          </>
-        )
-      ) : (
-        <CameraPreview.Wrapper>
-          <Feather
-            name={'camera'}
-            style={{ padding: 60 }}
-            size={35}
-            onPress={handleOpen}
-            color={'black'}
-          />
-        </CameraPreview.Wrapper>
+      {image.length != 3 && (
+        <AnimatedTouchableOpacity
+          activeOpacity={0.8}
+          onPress={handleOpenCamera}
+          style={[style.wrapperIconImage, animatedStyles]}
+        >
+          <Feather name="camera" size={30} color={theme.colors.primary[300]} />
+          <Text style={style.textCamera}> Abrir a câmera </Text>
+        </AnimatedTouchableOpacity>
+      )}
+      {image && (
+        <FlatList
+          data={image}
+          // horizontal
+          numColumns={2}
+          columnWrapperStyle={{
+            gap: 20,
+          }}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          centerContent
+          renderItem={({ index, item }) => {
+            return (
+              <View>
+                <TouchableOpacity
+                  style={{
+                    alignItems: 'center',
+                    backgroundColor: 'white',
+                    borderRadius: 999,
+                    elevation: 15,
+                    height: 30,
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    right: 5,
+                    top: 5,
+                    width: 30,
+                    zIndex: 2,
+                  }}
+                  onPress={() => handleRemoveArrayImage(item)}
+                >
+                  <Feather name={'trash-2'} size={20} color={'red'} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => handleImageZoom(item)}
+                  activeOpacity={0.9}
+                >
+                  <Image
+                    source={item}
+                    key={index}
+                    style={{
+                      borderRadius: 6,
+                      height: width * 0.4,
+                      width: width * 0.4,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        />
       )}
 
-      <Modal snapPoints={snapPoints2} ref={bottomSheetModalRef2}>
-        <ReactNativeZoomableView
-          style={{
-            flex: 1,
-          }}
-        >
-          <Image
-            style={{ width: '100%', height: '100%' }}
-            source={{ uri: 'data:image/jpg;base64,' + imageZoom }}
-            contentFit="cover"
+      <Modal
+        ref={bottomSheetModalRef}
+        enablePanDownToClose={false}
+        snapPoints={snapPoints}
+        handleIndicatorStyle={{
+          backgroundColor: theme.colors.white[500],
+        }}
+      >
+        <>
+          <Feather
+            name="x"
+            size={35}
+            onPress={() => bottomSheetModalRef.current?.handleDismiss()}
+            style={{ alignSelf: 'flex-end', marginRight: 20 }}
           />
-        </ReactNativeZoomableView>
-      </Modal>
-
-      <Modal snapPoints={snapPoints} ref={bottomSheetModalRef}>
-        <Feather
-          name="x"
-          onPress={() => bottomSheetModalRef.current?.handleDismiss()}
-          size={30}
-          color={'black'}
-        />
-        {showSpinner ? (
-          <Loading />
-        ) : (
-          <MemoizedCameraCustom2
-            setValue={methods.setValue}
-            arrayImage={image}
-            closeModal={() => bottomSheetModalRef.current?.handleDismiss()}
-          />
-        )}
+          <Text style={{ textAlign: 'center', color: theme.colors.gray[500] }}>
+            Arraste para ampliar a imagem.
+          </Text>
+          <ReactNativeZoomableView
+            style={{
+              flex: 1,
+            }}
+            maxZoom={2}
+          >
+            <Image
+              source={imageZoom}
+              style={{
+                height: width,
+                width: width,
+              }}
+            />
+          </ReactNativeZoomableView>
+        </>
       </Modal>
     </S.Root.WrapperSteps>
   );
 };
+
+const style = StyleSheet.create({
+  textCamera: {
+    backgroundColor: '#7474B7',
+    borderRadius: 6,
+    color: 'white',
+    padding: 6,
+  },
+  wrapperIconImage: {
+    alignItems: 'center',
+    borderColor: '#505086',
+    borderRadius: 6,
+    borderStyle: 'dashed',
+    borderWidth: 2,
+    gap: 6,
+    height: width * 0.35,
+    justifyContent: 'center',
+  },
+});

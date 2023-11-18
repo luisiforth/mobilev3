@@ -37,8 +37,8 @@ export default function ChangeReferenceProductLayout({
   const theme = useTheme();
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
   const snapPoints = useMemo(() => ['40%', '88%'], []);
-
   const query_references = useQuery('query_reference', async () => {
+    // if (filters) return [];
     const response = await api.get<ProductionLineRequest[]>(
       getChangeProductInReferenceURL(
         filters?.unit.value as number,
@@ -121,7 +121,7 @@ export default function ChangeReferenceProductLayout({
 
   const handleSubmit = async () => {
     Alert.alert(
-      'Deseja realizar esta ação ?',
+      'Deseja realizar esta ação?',
       'Deseja realmente trocar/pausar produto?',
       [
         { text: 'Sim', onPress: () => handleFetch() },
@@ -144,17 +144,17 @@ export default function ChangeReferenceProductLayout({
       postProductInReferenceURL({
         idFormat: filteredItem[0]?.IDFORMATO || 0,
         idProduct: filteredItem[0]?.IDFICHAPROD || 0,
-        idUser: credential?.userid!,
+        idUser: credential?.userid as number,
         line: filters?.line.value as number,
         unit: filters?.unit.value as number,
       })
     );
 
     if (response.status != 200) {
-      return Alert.alert('Houve um problema no envio', '');
+      return Alert.alert('Houve um problema no envio.', '');
     }
 
-    Alert.alert('', `Registro enviado com sucesso`);
+    Alert.alert('', `Registro enviado com sucesso!`);
     return navigation.goBack();
   };
 
@@ -207,7 +207,7 @@ export default function ChangeReferenceProductLayout({
               <TextInput.Wrapper label="Metragem Programada">
                 <TextInput.Content
                   editable={false}
-                  value={filteredItem[0]?.METRAPROGRAPCPITEM + ' m2'}
+                  value={filteredItem[0]?.METRAPROGRAPCPITEM + ' m²'}
                 />
               </TextInput.Wrapper>
               <TextInput.Wrapper label="Índice de Correção(%)">

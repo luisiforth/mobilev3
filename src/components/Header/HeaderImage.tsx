@@ -13,11 +13,7 @@ export function HeaderImage({ src = undefined }: HeaderImageProps) {
         location={[0.4, 0.8, 1]}
       >
         <S.Root.BorderImage>
-          <S.Root.Image
-            source={{
-              uri: src,
-            }}
-          />
+          <S.Root.Image source={require('assets/adaptive-icon.png')} />
         </S.Root.BorderImage>
       </S.Root.SkeletonAvatar>
     </>

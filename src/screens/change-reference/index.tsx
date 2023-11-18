@@ -189,7 +189,7 @@ export default function ChangeReferenceLayout() {
                   value={filteredItem[0]?.DESCLINHA}
                 />
               </TextInput.Wrapper>
-              <TextInput.Wrapper label="Data/Hora Inicio">
+              <TextInput.Wrapper label="Data/Hora início">
                 <TextInput.Content
                   editable={false}
                   value={`${formatDate(
@@ -197,7 +197,7 @@ export default function ChangeReferenceLayout() {
                   )} ${removeHourZeros(filteredItem[0]?.HORAINIPRODLINHA)}`}
                 />
               </TextInput.Wrapper>
-              <TextInput.Wrapper label="Data/Hora Fim">
+              <TextInput.Wrapper label="Data/Hora fim">
                 <TextInput.Content
                   editable={false}
                   value={`${

@@ -71,7 +71,12 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
     : [];
 
   const optionProduct = query_product.data
-    ? addLabelAndValue(query_product.data, 'DESCFICHAPROD', 'IDFICHAPROD')
+    ? addLabelAndValue(
+        query_product.data,
+        'DESCFICHAPROD',
+        'IDFICHAPROD',
+        'REFFICHAPROD'
+      )
     : [];
 
   const optionTypeStopped = query_type_stopped.data

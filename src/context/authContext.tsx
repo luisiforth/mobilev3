@@ -62,10 +62,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return Alert.alert('', `Usuário ou senha inválidos`);
+        return Alert.alert('', `Usuário ou senha inválidos!`);
       }
 
-      Alert.alert('', `Usuário ou senha inválidos`);
+      Alert.alert('', `Usuário ou senha inválidos!`);
 
       throw error;
     }

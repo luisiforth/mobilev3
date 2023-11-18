@@ -32,6 +32,7 @@ export default function GlobalLayout() {
                 <BottomSheetModalProvider>
                   <Stack
                     screenOptions={{
+                      animation: 'slide_from_right',
                       headerShadowVisible: false,
                       headerShown: false,
                       contentStyle: {

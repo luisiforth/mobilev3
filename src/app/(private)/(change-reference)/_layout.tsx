@@ -9,6 +9,7 @@ export default function HomeLayout() {
   return (
     <Stack
       screenOptions={{
+        animation: 'slide_from_right',
         contentStyle: {
           backgroundColor: theme.colors.background,
         },
@@ -28,7 +29,7 @@ export default function HomeLayout() {
               size={25}
             />
           ),
-          title: 'Troca de Referencia',
+          title: 'Troca de Referência',
         }}
       />
       <Stack.Screen

@@ -26,8 +26,8 @@ const WrapperContent = styled(Image)`
   margin-top: 30px;
   margin-left: 23px;
   border-radius: 6px;
-  height: 400px;
-  width: 250px;
+  /* height: 400px;
+  width: 250px; */
 `;
 
 const Icon = styled.TouchableOpacity<IconProps>`

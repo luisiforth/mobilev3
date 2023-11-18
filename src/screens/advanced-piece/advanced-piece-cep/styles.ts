@@ -1,5 +1,9 @@
+import { Dimensions } from 'react-native';
+
 import { Image } from 'expo-image';
 import styled from 'styled-components/native';
+
+const { width } = Dimensions.get('window');
 
 const Wrapper = styled.TouchableOpacity`
   flex: 1;
@@ -12,7 +16,8 @@ const Wrapper = styled.TouchableOpacity`
 
 const ImageContent = styled(Image)`
   border-radius: 6px;
-  height: 400px;
+  height: ${width * 0.6}px;
+  width: ${width * 0.6}px;
 `;
 
 const ImageContentModal = styled(Image)`

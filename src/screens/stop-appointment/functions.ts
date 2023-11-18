@@ -1,7 +1,6 @@
-import { ComportModalProps } from '@/components/Modal';
 import { format, subDays } from 'date-fns';
 
-interface FunctionProps extends ComportModalProps {
+interface FunctionProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   current: any;
 }

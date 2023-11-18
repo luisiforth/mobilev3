@@ -12,7 +12,7 @@ import StepModal from '@/components/StepModal';
 import useRealmCrud from '@/hooks/useCrud';
 import { useNetInfo } from '@/hooks/useNetInfo';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
-import { Link, useNavigation } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
 import { Historic_advanced_piece } from 'util/realm/schema/historic_advanced_piece';
@@ -20,6 +20,7 @@ import { Historic_advanced_piece } from 'util/realm/schema/historic_advanced_pie
 import { getAdvPiece, postAdvPiece } from './api-urls';
 import { StepCamera, StepOne, StepTwo, schema } from './components/Modals';
 import { renderItemProps } from './types';
+import { convertBase64 } from './utils/convertBase64';
 
 import * as S from './styles';
 
@@ -52,11 +53,20 @@ export default function AdvancedPieceLayout() {
     return resp;
   });
 
-  const { mutate: postMutation, error: mutateError } = useMutation(
+  const { mutate: postAllDatas, error: mutateError } = useMutation(
     'mutate_data',
-    async (item: { _id: string }) => {
+    async (item: { IMAGEM: string }) => {
       try {
-        return await api.post(postAdvPiece(), [item]);
+        const image = await convertBase64(item.IMAGEM as unknown as string[]);
+
+        delete item.IMAGEM;
+
+        const body = {
+          ...item,
+          IMAGEM: image,
+        };
+
+        return await api.post(postAdvPiece(), [body]);
       } catch (error) {
         console.error(
           'Erro ao realizar a mutação:',
@@ -65,31 +75,36 @@ export default function AdvancedPieceLayout() {
         throw error;
       }
     }
-    // {
-    //   onSettled: () => refetch(),
-    // }
   );
-  const { mutate: postMutation2 } = useMutation(
+
+  const { mutate: postSingleData } = useMutation(
     'mutate_data',
-    async (item: { _id: string }) => {
+    async (item: { _id: string; IMAGEM: string }) => {
       try {
-        const response = await api.post(postAdvPiece(), [item]);
-        if (response.status == 200) {
-          deleteRecord(item._id!);
-          return Alert.alert('', 'Dado enviado com sucesso!');
-        }
-        console.log(item._id);
+        const image = await convertBase64(item.IMAGEM as unknown as string[]);
+
+        delete item.IMAGEM;
+
+        const body = {
+          ...item,
+          IMAGEM: image,
+        };
+        await api.post(postAdvPiece(), [body]);
+        deleteRecord(item._id);
+        refetchRealm();
+        // console.log(item._id);
+      } catch (error) {
+        console.error('Erro ao realizar a mutação:', error);
         return Alert.alert(
           'Falha',
           'Dado não enviado, tente novamente mais tarde!'
         );
-      } catch (error) {
-        console.error('Erro ao realizar a mutação:', error);
-        throw error;
       }
     },
     {
-      onSettled: () => refetch(),
+      onSettled: () => {
+        return refetch();
+      },
     }
   );
 
@@ -160,6 +175,11 @@ export default function AdvancedPieceLayout() {
     ]);
   };
 
+  const handleSinglePost = (item: string) => {
+    postAllDatas(item as {});
+    return;
+  };
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => {
@@ -169,14 +189,13 @@ export default function AdvancedPieceLayout() {
           dataFromRealm?.length > 0 && (
             <CardCep.Icon
               icon="refresh-ccw"
-              onPress={() => sendAllDatas(dataFromRealm, 0)}
+              onPress={() => sendAllDatas(dataFromRealm as [], 0)}
             />
           )
         );
       },
     });
     if (isConnected && dataFromRealm?.length) {
-      console.log('oi ?');
       return Alert.alert('', 'Você possui dados a serem sincronizados.');
     }
   }, [dataFromRealm, isConnected]);
@@ -184,28 +203,31 @@ export default function AdvancedPieceLayout() {
   function RenderItem({ item, index }: renderItemProps) {
     const id = item?.FLAG ? item._id : item.ID;
     return (
-      <CardCep.Wrapper onAsync={item?.FLAG} key={index}>
-        <Link href={`/cep/${id}`}>
-          <S.Root.ContainerRenderItem>
-            {/* <CardCep.Image url={[item.IMAGEM[0]] || item.IMAGEM} /> */}
-            <S.Root.ContainerRenderItemText>
-              <Text>
-                <S.Root.Text>TOM: </S.Root.Text>
-                {item.TOM || item.TOMCEPPECAADIANTADA}
-              </Text>
-              <Text>
-                <S.Root.Text>Data:</S.Root.Text>
-                {item.DATA || item.DATACEPPECAADIANTADA}
-              </Text>
-              <Text>
-                <S.Root.Text>Hora:</S.Root.Text>
-                {item.HORA || item.HORACEPPECAADIANTADA}
-              </Text>
-            </S.Root.ContainerRenderItemText>
-          </S.Root.ContainerRenderItem>
+      <CardCep.Wrapper
+        onPress={() => router.push(`/cep/${id}`)}
+        onAsync={item?.FLAG}
+        key={index}
+      >
+        <S.Root.ContainerRenderItem>
+          {/* <CardCep.Image url={[item.IMAGEM[0]] || item.IMAGEM} /> */}
+          <S.Root.ContainerRenderItemText>
+            <Text>
+              <S.Root.Text>Tom: </S.Root.Text>
+              {item.TOM || item.TOMCEPPECAADIANTADA}
+            </Text>
+            <Text>
+              <S.Root.Text>Data: </S.Root.Text>
+              {item.DATA || item.DATACEPPECAADIANTADA}
+            </Text>
+            <Text>
+              <S.Root.Text>Hora: </S.Root.Text>
+              {item.HORA || item.HORACEPPECAADIANTADA}
+            </Text>
+          </S.Root.ContainerRenderItemText>
+        </S.Root.ContainerRenderItem>
 
-          {/* </Link> */}
-        </Link>
+        {/* </Link> */}
+
         <S.Root.ContainerRenderItem>
           {item?.FLAG && (
             <>
@@ -216,7 +238,7 @@ export default function AdvancedPieceLayout() {
               {isConnected && (
                 <CardCep.Icon
                   icon="refresh-ccw"
-                  onPress={() => postMutation2(item)}
+                  onPress={() => postSingleData(item)}
                 />
               )}
             </>
@@ -228,27 +250,33 @@ export default function AdvancedPieceLayout() {
 
   function sendAllDatas(data: [], currentIndex: number) {
     setIsPostDate(true);
-    setCurrentIndex(data.length);
     if (currentIndex < data.length) {
-      postMutation(data[currentIndex]);
+      postAllDatas(data[currentIndex]);
       currentIndex++;
       setTimeout(() => {
         sendAllDatas(data, currentIndex);
-      }, 5000); // Espere 1 segundo antes de enviar o próximo dado (ajuste conforme necessário)
-      setCurrentIndex(currentIndex);
+        setCurrentIndex(currentIndex);
+      }, 5000);
     }
-
-    if (currentIndex === data.length) {
-      Alert.alert('', 'Dados enviados com sucesso!');
-      deleteAll();
-      refetchRealm();
-      return setIsPostDate(false);
-    }
-
     if (mutateError) {
       Alert.alert('', 'Ocorreu um erro, contacte a administração do sistema.');
     }
   }
+
+  useEffect(() => {
+    // console.log('1');
+
+    // console.log({ isCurrentIndex });
+    // console.log({ data: dataFromRealm?.length });
+    if (isPostDate === true && isCurrentIndex === dataFromRealm?.length) {
+      deleteAll();
+      refetchRealm();
+      refetch();
+      // console.log('Dados enviados com sucesso!');
+      Alert.alert('', 'Dados enviados com sucesso!');
+      return setIsPostDate(false);
+    }
+  }, [isCurrentIndex]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     if (filters == null) {
@@ -266,7 +294,7 @@ export default function AdvancedPieceLayout() {
       IDDEFEITO: data.defect.value,
       DESCDEFEITO: data.defect.label,
       DEFORMADOCEPPECAADIANTADA: data.deformity.value,
-      IMAGEM: data.images,
+      // IMAGEM: await convertBase64(data.images),
       DIFTONCEPPECAADIANTADA: data.diff.value,
       OBSCEPPECAADIANTADA: data.observation || ' ',
       BRILHOCEPPECAADIANTADA: data.shine.value,
@@ -274,18 +302,19 @@ export default function AdvancedPieceLayout() {
       TOMCEPPECAADIANTADA: data.tom,
       TONCEPPECAADIANTADA: data.tonality.value,
     };
+
     if (!isConnected) {
-      createRecord(body);
+      createRecord({ ...body, IMAGEM: data.images });
       return refetchRealm();
     }
 
     try {
-      await api.post(postAdvPiece(), [body]);
+      const bodyOnline = { ...body, IMAGEM: await convertBase64(data.images) };
+      await api.post(postAdvPiece(), [bodyOnline]);
       return refetch();
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.log(error);
       return Alert.alert(
         'Ocorreu um erro no envio',
         `Contacte um administrador e informe o erro: ${error.message}.`
@@ -314,6 +343,7 @@ export default function AdvancedPieceLayout() {
               data={data || []}
               ItemSeparatorComponent={ListItemSeparator}
               renderItem={RenderItem}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item._id || item.ID.toString()}
               initialNumToRender={5}
               refreshControl={
@@ -326,7 +356,7 @@ export default function AdvancedPieceLayout() {
             />
           </S.Root.WrapperFlatList>
           <Button
-            text="Apontamento"
+            text="Apontar"
             onPress={() =>
               bottomSheetModalRef.current?.handlePresentModalPress()
             }

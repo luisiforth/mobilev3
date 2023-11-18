@@ -20,7 +20,7 @@ export default function CameraPreviewIcon({
     <S.Root.Icon isCameraShot={isCameraShot} {...props}>
       <Feather
         name={icon}
-        size={35}
+        size={25}
         color={isCameraShot ? theme.colors.black : theme.colors.red[500]}
       />
     </S.Root.Icon>

@@ -14,7 +14,7 @@ export function CardCepRoot({
   ...props
 }: CardCepRootProps) {
   return (
-    <S.Root.Wrapper onAsync={onAsync} {...props}>
+    <S.Root.Wrapper activeOpacity={0.9} onAsync={onAsync} {...props}>
       {children}
       {/* <CardCep.Icon /> */}
     </S.Root.Wrapper>

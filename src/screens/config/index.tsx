@@ -52,6 +52,7 @@ export default function ConfigPageLayout() {
 
   return (
     <>
+      {/* @ts-ignore */}
       <S.Root.Wrapper insets={{ top: 60 }}>
         {!isVisible ? (
           <>

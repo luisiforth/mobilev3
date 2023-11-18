@@ -12,7 +12,7 @@ import CardNotification from '@/components/CardNotification';
 import { ControlledSelect } from '@/components/ControlledSelect';
 import { Header } from '@/components/Header';
 import Modal, { ComportModalProps } from '@/components/Modal';
-import Search from '@/components/Search';
+// import Search from '@/components/Search';
 import { Select } from '@/components/Select';
 import useAsync from '@/hooks/useAsync';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
@@ -124,7 +124,7 @@ export default function HomeLayout() {
               <Header.Text text="Olá," />
               <Header.Title title={credential?.username as string} />
             </View>
-            <Header.Image src="https://as2.ftcdn.net/v2/jpg/05/75/67/99/1000_F_575679944_Z4IIATf3mJLCQhXhNFAorlpYPCUvnXuz.jpg" />
+            <Header.Image src={'assets/adaptive-icon.png'} />
           </Header.YStack>
         </Header.Wrapper>
 
@@ -148,7 +148,7 @@ export default function HomeLayout() {
             <Card.Container>
               <S.Root.WrapperFlatList>
                 <FlatList
-                  data={modules_data}
+                  data={modules_data as []}
                   numColumns={2}
                   renderItem={RenderItem}
                 />

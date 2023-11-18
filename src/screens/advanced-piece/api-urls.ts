@@ -10,3 +10,7 @@ export function getAdvPiece(unit: number, line: number) {
     'dd/MM/yyyy'
   )}` as const;
 }
+
+export function getUniquePiece(id: number) {
+  return `/v3/cq/peca-adiantada/${id}` as const;
+}
