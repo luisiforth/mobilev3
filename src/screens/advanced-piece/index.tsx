@@ -77,7 +77,7 @@ export default function AdvancedPieceLayout() {
     }
   );
 
-  const { mutate: postSingleData } = useMutation(
+  const { mutate: postSingleData, isLoading: LoadingSinglePost } = useMutation(
     'mutate_data',
     async (item: { _id: string; IMAGEM: string }) => {
       try {
@@ -175,10 +175,10 @@ export default function AdvancedPieceLayout() {
     ]);
   };
 
-  const handleSinglePost = (item: string) => {
-    postAllDatas(item as {});
-    return;
-  };
+  // const handleSinglePost = (item: string) => {
+  //   postAllDatas(item as {});
+  //   return;
+  // };
 
   useEffect(() => {
     navigation.setOptions({
@@ -324,7 +324,11 @@ export default function AdvancedPieceLayout() {
 
   return (
     <S.Root.Wrapper>
-      {isLoading || refreshing || isRefetching || isPostDate ? (
+      {isLoading ||
+      refreshing ||
+      LoadingSinglePost ||
+      isRefetching ||
+      isPostDate ? (
         isPostDate ? (
           <View style={{ alignItems: 'center' }}>
             <Loading />
