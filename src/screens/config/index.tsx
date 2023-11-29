@@ -48,6 +48,10 @@ export default function ConfigPageLayout() {
       label: 'DEXCO',
       value: process.env.EXPO_PUBLIC_DEXCO_API_URL,
     },
+    {
+      label: 'TESTE',
+      value: process.env.EXPO_PUBLIC_TESTE_API_URL,
+    },
   ];
 
   return (

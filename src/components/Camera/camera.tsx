@@ -48,7 +48,7 @@ const MemoizedCameraCustom2 = React.memo(function CameraCustom2({
     });
 
     if (photo) {
-      setImages((prevImages) => [...prevImages, photo.base64] as string[]);
+      setImages((prevImages) => [...prevImages, photo.uri] as string[]);
       if (images.length === 2) return closeModal();
       return Alert.alert('Aviso', 'Deseja continuar batendo foto?', [
         {

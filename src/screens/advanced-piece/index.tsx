@@ -359,12 +359,14 @@ export default function AdvancedPieceLayout() {
               }
             />
           </S.Root.WrapperFlatList>
-          <Button
-            text="Apontar"
-            onPress={() =>
-              bottomSheetModalRef.current?.handlePresentModalPress()
-            }
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              text="Apontar"
+              onPress={() =>
+                bottomSheetModalRef.current?.handlePresentModalPress()
+              }
+            />
+          </View>
           <Modal snapPoints={['80%', '80%']} ref={bottomSheetModalRef}>
             <S.Root.WrapperModal>
               <StepModal

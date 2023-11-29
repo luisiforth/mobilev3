@@ -1,4 +1,5 @@
-import { Text } from 'react-native';
+import { Text, ViewProps } from 'react-native';
+
 import * as S from './styles';
 
 type InputProps = {
@@ -6,16 +7,17 @@ type InputProps = {
   label: string;
   error?: string;
   required?: boolean;
-};
+} & ViewProps;
 
 export default function InputRoot({
   children,
   error,
   label,
   required = false,
+  ...props
 }: InputProps) {
   return (
-    <S.Root.Wrapper>
+    <S.Root.Wrapper {...props}>
       <S.Root.Text>
         {label} {required && <Text style={{ color: 'red' }}> *</Text>}
       </S.Root.Text>

@@ -1,7 +1,7 @@
 import { FieldErrors, UseFormReturn } from 'react-hook-form';
 
 import { ControlledInput } from '@/components/ControlledInput';
-import { ControlledSelect } from '@/components/ControlledSelect';
+import { Selects } from '@/components/ControlledSelect';
 import { Select } from '@/components/Select';
 import { TextInput } from '@/components/TextInput';
 import { useOnRequired } from '@/hooks/useOnRequired';
@@ -28,7 +28,7 @@ export const StepTwo = ({ methods, errors, onRequired }: StepProps) => {
   return (
     <S.Root.WrapperSteps>
       <Select.Wrapper error={errors.defect?.message} label="Defeito *">
-        <ControlledSelect
+        <Selects.Normal
           item={defects}
           control={methods.control}
           placeholder="Selecione um defeito"
@@ -49,7 +49,7 @@ export const StepTwo = ({ methods, errors, onRequired }: StepProps) => {
       </TextInput.Wrapper>
 
       <Select.Wrapper error={errors.deformity?.message} label="Deformidade *">
-        <ControlledSelect
+        <Selects.Normal
           item={item}
           control={methods.control}
           placeholder="Selecione uma deformidade"
@@ -61,7 +61,7 @@ export const StepTwo = ({ methods, errors, onRequired }: StepProps) => {
         error={errors.diff?.message}
         label="Diferença de tonalidade da mesma peça *"
       >
-        <ControlledSelect
+        <Selects.Normal
           item={item}
           control={methods.control}
           placeholder="Selecione um valor"

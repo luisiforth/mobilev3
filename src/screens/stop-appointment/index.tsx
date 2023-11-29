@@ -5,6 +5,7 @@ import { FlatList, View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
+import { ListItemEmpty } from '@/components/ListItemEmpty';
 import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import StepModal from '@/components/StepModal';
@@ -107,10 +108,8 @@ export default function StopAppointmentLayout() {
     };
 
     try {
-      const response = await api.post(postDataURL(), body);
-      if (response.status == 200) {
-        Alert.alert('', 'Enviado com sucesso!');
-      }
+      await api.post(postDataURL(), body);
+      Alert.alert('', 'Enviado com sucesso!');
     } catch (err: any) {
       Alert.alert('Erro:', err.message);
       console.log(err.message);
@@ -208,20 +207,21 @@ export default function StopAppointmentLayout() {
         <S.Root.Wrapper>
           <FlatList
             data={data as []}
+            ListEmptyComponent={ListItemEmpty}
             ItemSeparatorComponent={ListItemSeparator}
             renderItem={RenderItem}
           />
-
-          <Button
-            text="Apontar"
-            onPress={() =>
-              handlePresentModalPressSteps(
-                bottomSheetModalRefStep,
-                bottomSheetModalRefShow
-              )
-            }
-          />
-
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              text="Apontar"
+              onPress={() =>
+                handlePresentModalPressSteps(
+                  bottomSheetModalRefStep,
+                  bottomSheetModalRefShow
+                )
+              }
+            />
+          </View>
           <Modal snapPoints={snapPoints} ref={bottomSheetModalRefShow}>
             <>
               {isLoadingModal ? (
@@ -309,6 +309,4 @@ export default function StopAppointmentLayout() {
   );
 }
 
-export const ListItemSeparator = () => {
-  return <View style={{ height: 10 }} />;
-};
+export const ListItemSeparator = () => {};

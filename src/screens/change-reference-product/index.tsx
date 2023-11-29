@@ -229,11 +229,13 @@ export default function ChangeReferenceProductLayout({
                   value={filteredItem[0]?.DESCPCP}
                 />
               </TextInput.Wrapper>
-              <Button
-                text={handleButtonOptions(typeRoute as string, theme).text}
-                color={handleButtonOptions(typeRoute as string, theme).color}
-                onPress={handleSubmit}
-              />
+              <View style={{ flexDirection: 'row' }}>
+                <Button
+                  text={handleButtonOptions(typeRoute as string, theme).text}
+                  color={handleButtonOptions(typeRoute as string, theme).color}
+                  onPress={handleSubmit}
+                />
+              </View>
             </S.Root.WrapperModal>
           </Modal>
         </>

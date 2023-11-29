@@ -56,69 +56,74 @@ export default function LoginLayout() {
 
   return (
     <>
-      {/* @ts-ignore */}
-      <S.Root.WrapperIndex insets={insets}>
-        <View style={{ alignSelf: 'flex-start' }}>
-          <Feather
-            name={'settings'}
-            onPress={() => router.push('/config')}
-            size={24}
-            color={'black'}
-          />
-          <Text> {api.defaults.baseURL + ''}</Text>
-        </View>
-        <Image
-          style={{ width: 400, height: 240 }}
-          source={require('./logo.png')}
-        />
-        <Card.Wrapper>
-          <Card.Container>
-            <TextInput.Wrapper
-              required
-              error={errors.user?.message}
-              label="Usuário"
-            >
-              <TextInput.Icon disableTouch icon="user" />
-              <ControlledInput
-                name="user"
-                autoCapitalize="none"
-                control={methods.control}
-                keyboardType="default"
-                placeholder="Insira o seu usuário"
-              />
-            </TextInput.Wrapper>
-            <TextInput.Wrapper
-              required
-              error={errors.password?.message}
-              label="Senha"
-            >
-              <TextInput.Icon
-                onPressIn={() => setIsVisiblePassword(!isVisiblePassword)}
-                onPressOut={() => setIsVisiblePassword(!isVisiblePassword)}
-                icon="key"
-              />
-              <ControlledInput
-                name="password"
-                control={methods.control}
-                autoCapitalize="none"
-                secureTextEntry={!isVisiblePassword}
-                keyboardType="default"
-                placeholder="Insira o seu senha"
-              />
-            </TextInput.Wrapper>
-            <Button
-              text="Entrar"
-              onPress={handleSubmit(onSubmit)}
-              isLoading={isLoading || !endpoint}
+      <View style={{ flex: 1 }}>
+        {/* @ts-ignore */}
+        <S.Root.WrapperIndex insets={insets}>
+          <View style={{ alignSelf: 'flex-start' }}>
+            <Feather
+              name={'settings'}
+              onPress={() => router.push('/config')}
+              size={24}
+              color={'black'}
             />
-            {!endpoint && (
-              <Text style={{ color: 'red', textAlign: 'center' }}>
-                * Favor informar uma rota para o uso da aplicação
-              </Text>
-            )}
-          </Card.Container>
-        </Card.Wrapper>
-      </S.Root.WrapperIndex>
+            {/* <Text> {api.defaults.baseURL + ''}</Text> */}
+          </View>
+          <Image
+            style={{ width: 400, height: 240 }}
+            source={require('./logo.png')}
+          />
+          <Card.Wrapper>
+            <Card.Container>
+              <TextInput.Wrapper
+                required
+                error={errors.user?.message}
+                label="Usuário"
+              >
+                <TextInput.Icon disableTouch icon="user" />
+                <ControlledInput
+                  name="user"
+                  autoCapitalize="none"
+                  control={methods.control}
+                  keyboardType="default"
+                  placeholder="Insira o seu usuário"
+                />
+              </TextInput.Wrapper>
+              <TextInput.Wrapper
+                required
+                error={errors.password?.message}
+                label="Senha"
+              >
+                <TextInput.Icon
+                  onPressIn={() => setIsVisiblePassword(!isVisiblePassword)}
+                  onPressOut={() => setIsVisiblePassword(!isVisiblePassword)}
+                  icon="key"
+                />
+                <ControlledInput
+                  name="password"
+                  control={methods.control}
+                  autoCapitalize="none"
+                  secureTextEntry={!isVisiblePassword}
+                  keyboardType="default"
+                  placeholder="Insira o seu senha"
+                />
+              </TextInput.Wrapper>
+
+              {!endpoint && (
+                <Text style={{ color: 'red', textAlign: 'center' }}>
+                  * Favor informar uma rota para o uso da aplicação
+                </Text>
+              )}
+            </Card.Container>
+          </Card.Wrapper>
+        </S.Root.WrapperIndex>
+      </View>
+      <View style={{ height: 60, justifyContent: 'center' }}>
+        <Button
+          text="Entrar"
+          onPress={handleSubmit(onSubmit)}
+          isLoading={isLoading || !endpoint}
+        />
+      </View>
     </>
   );
 }

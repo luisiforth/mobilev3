@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { StyleSheet } from 'react-native';
+import { Alert } from 'react-native';
 import Animated, {
   useSharedValue,
   withSpring,
@@ -17,6 +18,7 @@ import Animated, {
 
 import Modal, { ComportModalProps } from '@/components/Modal';
 import { useOnRequired } from '@/hooks/useOnRequired';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 import { Feather } from '@expo/vector-icons';
 import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
 import { Image } from 'expo-image';
@@ -81,15 +83,26 @@ export const StepCamera = ({ methods, onRequired }: StepProps) => {
     if (image && image?.length === 3) return;
     translateY.value = withSpring(0);
     const camera = await ImagePicker.launchCameraAsync({
-      // allowsEditing: true,
-      base64: true,
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
     });
 
     methods.setValue('images', image);
+
     if (!camera.canceled) {
-      setImage((prev) => [...prev, camera.assets[0].uri]);
+      const compressedImage = await ImageResizer.createResizedImage(
+        camera.assets[0].uri,
+        1000, // width
+        1500, // height
+        'JPEG', // format
+        90 // quality
+      );
+      if (compressedImage.size > 500000)
+        return Alert.alert(
+          'A Imagem excedeu o limite de tamanho!',
+          'Favor diminuir o tamanho nas configurações do aparelhou ou entrar em contato com o administrador.'
+        );
+      setImage((prev) => [...prev, compressedImage.uri]);
     }
   }, [image]);
 

@@ -44,6 +44,7 @@ export const COLORS = {
   },
   orange: {
     button: 'rgb(255, 154, 62)',
+    situation: 'rgba(255, 153, 59, 0.8)',
     500: '#E6a457',
   },
 };

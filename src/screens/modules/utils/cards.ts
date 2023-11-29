@@ -11,7 +11,12 @@ export const modules_data = [
   },
   {
     icon: 'package',
-    path: '/change_reference',
-    title: 'Troca Referência',
+    path: '/changeReference',
+    title: 'Troca. Ref',
+  },
+  {
+    icon: 'package',
+    path: '/controlDefects',
+    title: 'Controle de Qualidade e Defeitos',
   },
 ];

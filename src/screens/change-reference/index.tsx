@@ -4,6 +4,7 @@ import { Alert, SectionList, View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
+import { ListItemEmpty } from '@/components/ListItemEmpty';
 import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import { TextInput } from '@/components/TextInput';
@@ -129,6 +130,7 @@ export default function ChangeReferenceLayout() {
             <SectionList
               sections={data_obj}
               renderItem={RenderItem}
+              ListEmptyComponent={ListItemEmpty}
               renderSectionHeader={RenderSectionHeader}
               SectionSeparatorComponent={ListItemSeparator}
               ItemSeparatorComponent={ListItemSeparator}

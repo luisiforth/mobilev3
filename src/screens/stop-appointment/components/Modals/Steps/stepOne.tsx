@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useMutation, useQuery } from 'react-query';
 
-import { ControlledSelect } from '@/components/ControlledSelect';
+import { Selects } from '@/components/ControlledSelect';
 import { Select } from '@/components/Select';
 import { useOnRequired } from '@/hooks/useOnRequired';
 import {
@@ -109,7 +109,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
   return (
     <S.Root.WrapperSteps>
       <Select.Wrapper required label="Selecione o Equipamento">
-        <ControlledSelect
+        <Selects.Normal
           item={optionEquip}
           placeholder="Selecione o equipamento"
           control={methods.control}
@@ -117,7 +117,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
         />
       </Select.Wrapper>
       <Select.Wrapper required label="Selecione o Produto">
-        <ControlledSelect
+        <Selects.Normal
           item={optionProduct}
           placeholder="Selecione o Produto"
           control={methods.control}
@@ -125,7 +125,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
         />
       </Select.Wrapper>
       <Select.Wrapper required label="Selecione o Tipo da Parada">
-        <ControlledSelect
+        <Selects.Normal
           item={optionTypeStopped}
           placeholder="Selecione o Tipo da Parada"
           control={methods.control}
@@ -138,7 +138,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
         />
       </Select.Wrapper>
       <Select.Wrapper required label="Selecione o Motivo da Parada ">
-        <ControlledSelect
+        <Selects.Normal
           item={optionReasonStopped}
           // enabled={optionReasonStopped.length > 0}
           placeholder="Selecione a Parada"

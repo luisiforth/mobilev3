@@ -39,6 +39,10 @@ export default function HomeLayout() {
         options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
         name="(change-reference)"
       />
+      <Drawer.Screen
+        options={{ drawerItemStyle: { display: 'none' }, unmountOnBlur: true }}
+        name="(control-quality-defect)"
+      />
     </Drawer>
   );
 }

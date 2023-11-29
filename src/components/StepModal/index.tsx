@@ -1,37 +1,40 @@
 import React, { useCallback, useState } from 'react';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, useForm } from 'react-hook-form';
+import { ActivityIndicator } from 'react-native';
 import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  ActivityIndicator,
-  LayoutRectangle,
 } from 'react-native';
 
 import { ProgressBar } from '@/components/ProgressBar';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { AxiosResponse } from 'axios';
 import * as Yup from 'yup';
 
 import * as S from './styles';
-import { NativeSyntheticEvent } from 'react-native';
 
-interface StepModalProps {
+interface StepModalProps<DataFormT extends FieldValues, DataRequestT> {
   schema: Yup.ObjectSchema<FieldValues>;
-  onSubmit: SubmitHandler<FieldValues>;
+  onSubmit: (
+    data: DataFormT
+  ) => Promise<AxiosResponse<DataRequestT[], any> | undefined>;
   steps: React.ElementType[];
+  defaultValue?: any;
 }
 
-export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
+export default function StepModal<
+  DataFormT extends FieldValues,
+  DataRequestT = any,
+>({
+  schema,
+  onSubmit,
+  steps,
+  defaultValue,
+}: StepModalProps<DataFormT, DataRequestT>) {
   const [currentStep, setCurrentStep] = useState(1);
   const [areRequiredFieldFilled, setAreRequiredFieldsFilled] = useState(false);
-  const onContentLayout = (
-    event: NativeSyntheticEvent<{ layout: LayoutRectangle }>
-  ) => {
-    const { height } = event.nativeEvent.layout;
-    return height;
-  };
-
   const handleAreRequiredFieldsFilled = (value: boolean) => {
     return value
       ? setAreRequiredFieldsFilled(value)
@@ -39,6 +42,7 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
   };
 
   const methods = useForm({
+    defaultValues: defaultValue,
     resolver: yupResolver(schema),
   });
 
@@ -48,7 +52,7 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
     formState: { errors },
   } = methods;
 
-  // console.log(errors)
+  // console.log(errors);
 
   const componentElement = steps.map((Component, index) => (
     <Component
@@ -57,7 +61,6 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
       control={control}
       methods={methods}
       errors={errors}
-      on
     />
   ));
 
@@ -71,7 +74,6 @@ export default function StepModal({ schema, onSubmit, steps }: StepModalProps) {
     setCurrentStep((currentStep) => currentStep + 1);
   }, [currentStep, steps.length]);
 
-  // console.log(methods.formState.errors);
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <KeyboardAvoidingView enabled>

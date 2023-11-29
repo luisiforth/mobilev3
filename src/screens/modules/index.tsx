@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import { Card } from '@/components/Card';
 import { CardModules } from '@/components/CardModules';
 import CardNotification from '@/components/CardNotification';
-import { ControlledSelect } from '@/components/ControlledSelect';
+import { Selects } from '@/components/ControlledSelect';
 import { Header } from '@/components/Header';
 import Modal, { ComportModalProps } from '@/components/Modal';
 // import Search from '@/components/Search';
@@ -160,7 +160,7 @@ export default function HomeLayout() {
       <Modal snapPoints={['40%', '60%']} ref={bottomSheetModalRefShow}>
         <S.Root.WrapperModal>
           <Select.Wrapper error={errors.unit?.message} label="Unidade *">
-            <ControlledSelect
+            <Selects.Normal
               item={optionUnit}
               name="unit"
               control={control}
@@ -172,18 +172,20 @@ export default function HomeLayout() {
           </Select.Wrapper>
 
           <Select.Wrapper error={errors.line?.message} label="Linha *">
-            <ControlledSelect
+            <Selects.Normal
               item={optionLine}
               name="line"
               control={control}
               placeholder="Escolha uma linha"
             />
           </Select.Wrapper>
-          <Button
-            text="Filtrar"
-            isLoading={isLoading}
-            onPress={handleSubmit(onSubmit)}
-          />
+          <View style={{ flexDirection: 'row' }}>
+            <Button
+              text="Filtrar"
+              isLoading={isLoading}
+              onPress={handleSubmit(onSubmit)}
+            />
+          </View>
         </S.Root.WrapperModal>
       </Modal>
       {/* <Modal isModalOpen={modalVisible} toggleModal={toggleModal} /> */}

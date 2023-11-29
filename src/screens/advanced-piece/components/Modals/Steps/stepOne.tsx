@@ -1,7 +1,7 @@
 import { FieldErrors, UseFormReturn } from 'react-hook-form';
 
 import { ControlledInput } from '@/components/ControlledInput';
-import { ControlledSelect } from '@/components/ControlledSelect';
+import { Selects } from '@/components/ControlledSelect';
 import { Select } from '@/components/Select';
 import { TextInput } from '@/components/TextInput';
 import { useOnRequired } from '@/hooks/useOnRequired';
@@ -36,7 +36,7 @@ export const StepOne = ({ methods, errors, onRequired }: StepProps) => {
       </TextInput.Wrapper>
 
       <Select.Wrapper error={errors.tonality?.message} label="Tonalidade *">
-        <ControlledSelect
+        <Selects.Normal
           item={item}
           placeholder="Selecione a tonalidade"
           control={methods.control}
@@ -45,7 +45,7 @@ export const StepOne = ({ methods, errors, onRequired }: StepProps) => {
       </Select.Wrapper>
 
       <Select.Wrapper error={errors.texture?.message} label="Textura *">
-        <ControlledSelect
+        <Selects.Normal
           item={item}
           placeholder="Selecione a textura"
           control={methods.control}
@@ -54,7 +54,7 @@ export const StepOne = ({ methods, errors, onRequired }: StepProps) => {
       </Select.Wrapper>
 
       <Select.Wrapper error={errors.shine?.message} label="Brilho *">
-        <ControlledSelect
+        <Selects.Normal
           item={item}
           control={methods.control}
           placeholder="Selecione o brilho"

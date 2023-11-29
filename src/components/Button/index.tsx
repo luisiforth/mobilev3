@@ -8,12 +8,14 @@ type ButtonProps = {
   text: string;
   color?: string;
   isLoading?: boolean;
+  size?: 'small' | 'medium' | 'large';
 } & TouchableOpacityProps;
 
 export default function Button({
   isLoading,
   text,
   color,
+  size = 'small',
   ...props
 }: ButtonProps) {
   const theme = useTheme();
@@ -28,7 +30,8 @@ export default function Button({
       {isLoading ? (
         <S.Root.Spinner size="small" color={theme.colors.white[500]} />
       ) : (
-        <S.Root.Text>{text}</S.Root.Text>
+        //@ts-ignore
+        <S.Root.Text size={size}>{text}</S.Root.Text>
       )}
     </S.Root.Wrapper>
   );
