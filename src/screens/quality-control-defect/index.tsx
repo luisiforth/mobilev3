@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { SubmitHandler } from 'react-hook-form';
 import {
   Alert,
@@ -20,7 +26,9 @@ import Modal, { ComportModalProps } from '@/components/Modal';
 import StepModal from '@/components/StepModal';
 import { COLORS } from '@/constants';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
+import Feather from '@expo/vector-icons/Feather';
 import { AxiosError } from 'axios';
+import * as Device from 'expo-device';
 import { useTheme } from 'styled-components/native';
 import { api } from 'util/axios/axios';
 import { formatDate } from 'util/functions/formatDate';
@@ -43,7 +51,7 @@ export default function ControlQualityDefectLayout() {
   const { credential } = useCredentialStore();
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
   const theme = useTheme();
-  const snapPoints = useMemo(() => ['40%', '95%'], []);
+  const snapPoints = useMemo(() => ['100%'], []);
   const { filters } = useFilterStore();
   const queryDefects = useQuery('query_defect_rectify', () => {
     if (filters == null || filters == undefined) {
@@ -51,7 +59,9 @@ export default function ControlQualityDefectLayout() {
     }
     return getDefectRectify(filters?.unit?.value, filters?.line?.value);
   });
-
+  useEffect(() => {
+    return console.log(Device.deviceType);
+  }, []);
   const onSubmit: SubmitHandler<TSchema> = async (data) => {
     const ITENS = data.values?.map((v) => ({
       AMOSTRA: data.sample,
@@ -122,10 +132,6 @@ export default function ControlQualityDefectLayout() {
     return <Loading />;
   }
 
-  if (queryDefects.data?.length == 0) {
-    return <ListItemEmpty />;
-  }
-
   const handleDataSelect = (item: TItem) => {
     return setSelected(item);
   };
@@ -143,7 +149,7 @@ export default function ControlQualityDefectLayout() {
         'Selecione outro registro para realizar está ação.'
       );
 
-    Alert.alert('Deseja realizar está ação ?', '', [
+    Alert.alert('Deseja realizar esta ação?', '', [
       {
         style: 'cancel',
         text: 'Não',
@@ -167,20 +173,22 @@ export default function ControlQualityDefectLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
-        disableIntervalMomentum
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      >
-        <TouchableOpacity activeOpacity={0.8} style={{ zIndex: 0 }}>
-          <View style={styles.header}>
-            {title.map((value, index) => (
-              <Text key={index} style={styles.headerItem}>
-                {value}
-              </Text>
-            ))}
-          </View>
-          <View style={{ flex: 1 }}>
+      {queryDefects.data?.length == 0 ? (
+        <ListItemEmpty />
+      ) : (
+        <ScrollView
+          disableIntervalMomentum
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        >
+          <TouchableOpacity activeOpacity={0.9} style={{ zIndex: 0 }}>
+            <View style={styles.header}>
+              {title.map((value, index) => (
+                <Text key={index} style={styles.headerItem}>
+                  {value}
+                </Text>
+              ))}
+            </View>
             <FlatList
               style={{ flex: 1 }}
               data={queryDefects.data}
@@ -214,9 +222,9 @@ export default function ControlQualityDefectLayout() {
                 );
               }}
             />
-          </View>
-        </TouchableOpacity>
-      </ScrollView>
+          </TouchableOpacity>
+        </ScrollView>
+      )}
       <View
         style={{
           flexDirection: 'row',
@@ -235,8 +243,19 @@ export default function ControlQualityDefectLayout() {
         />
       </View>
 
-      <Modal snapPoints={snapPoints} ref={bottomSheetModalRef}>
-        <View>
+      <Modal
+        enablePanDownToClose={false}
+        snapPoints={snapPoints}
+        handleIndicatorStyle={{ backgroundColor: 'transparent' }}
+        ref={bottomSheetModalRef}
+      >
+        <Feather
+          name="x"
+          size={35}
+          onPress={() => bottomSheetModalRef.current?.handleDismiss()}
+          style={{ alignSelf: 'flex-end', marginRight: 20 }}
+        />
+        <View style={{ padding: 10, gap: 20 }}>
           <StepModal
             onSubmit={onSubmit}
             schema={schema}

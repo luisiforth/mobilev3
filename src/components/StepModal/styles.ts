@@ -16,7 +16,7 @@ const Button = styled.TouchableOpacity<ButtonProps>`
   justify-content: center;
   flex-direction: row;
   border-radius: ${({ theme }) => theme.border.radius[6]};
-  padding: ${({ theme }) => theme.spacings[12]};
+  padding: ${({ theme }) => theme.spacings[20]};
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
   background-color: ${({ theme, finalStep }) =>
     finalStep ? theme.colors.green.button : theme.colors.primary[300]};

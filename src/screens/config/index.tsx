@@ -99,7 +99,13 @@ export default function ConfigPageLayout() {
                 ))}
               </Picker>
             </Select.Wrapper>
-            <Button text="Adicionar" onPress={() => handleEnv(value)} />
+            <View
+              style={{
+                flexDirection: 'row',
+              }}
+            >
+              <Button text="Adicionar" onPress={() => handleEnv(value)} />
+            </View>
           </View>
         )}
       </S.Root.Wrapper>

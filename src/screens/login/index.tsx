@@ -117,7 +117,7 @@ export default function LoginLayout() {
           </Card.Wrapper>
         </S.Root.WrapperIndex>
       </View>
-      <View style={{ height: 60, justifyContent: 'center' }}>
+      <View style={{ flexDirection: 'row' }}>
         <Button
           text="Entrar"
           onPress={handleSubmit(onSubmit)}

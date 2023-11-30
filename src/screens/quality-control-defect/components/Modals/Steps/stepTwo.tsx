@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { View } from 'react-native';
+import { Dimensions } from 'react-native';
+import {
+  NativeViewGestureHandler,
+  ScrollView,
+} from 'react-native-gesture-handler';
 
 import { TextInput } from '@/components/TextInput';
+import { TouchableOpacity } from '@gorhom/bottom-sheet';
 
 import { InputTwoStep } from '../../InputStepTwo';
 
@@ -14,30 +19,30 @@ interface StepProps {
 type TDefects = {
   LABEL: string;
   ID: number;
-}[];
+};
+
+const { width } = Dimensions.get('screen');
 
 export const StepTwo = ({ methods, onRequired }: StepProps) => {
-  const [defects, setDefects] = useState<TDefects>([]);
-
-  useEffect(() => {
-    setDefects(methods.getValues('values'));
-  }, [defects]);
-
   return (
-    <View>
-      <View style={{ padding: 10, gap: 20 }}>
-        {defects?.map((v, index) => (
-          <View key={v.ID}>
+    <NativeViewGestureHandler disallowInterruption={true}>
+      <ScrollView style={{ height: width * 0.38 }}>
+        {methods.getValues('values')?.map((v: TDefects, index: number) => (
+          <TouchableOpacity
+            activeOpacity={1}
+            key={index}
+            style={{ marginBottom: 20 }}
+          >
             <TextInput.Wrapper required label={v.LABEL} />
             <InputTwoStep
               onRequired={onRequired}
               methods={methods}
               index={index}
             />
-          </View>
+          </TouchableOpacity>
         ))}
-      </View>
-    </View>
+      </ScrollView>
+    </NativeViewGestureHandler>
   );
 };
 

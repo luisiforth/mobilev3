@@ -52,16 +52,15 @@ export default function StepModal<
     formState: { errors },
   } = methods;
 
-  // console.log(errors);
-
-  const componentElement = steps.map((Component, index) => (
-    <Component
-      key={index}
-      onRequired={handleAreRequiredFieldsFilled}
-      control={control}
-      methods={methods}
-      errors={errors}
-    />
+  const componentElement = steps.map((Component) => (
+    <>
+      <Component
+        onRequired={handleAreRequiredFieldsFilled}
+        control={control}
+        methods={methods}
+        errors={errors}
+      />
+    </>
   ));
 
   const handleBack = useCallback(() => {
@@ -79,6 +78,7 @@ export default function StepModal<
       <KeyboardAvoidingView enabled>
         <S.Root.Wrapper>
           <ProgressBar total={steps.length} current={currentStep} />
+
           {componentElement[currentStep - 1]}
           <S.Root.Content>
             {currentStep > 1 && (

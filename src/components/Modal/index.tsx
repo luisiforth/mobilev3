@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react';
+import { Alert } from 'react-native';
 
 import {
   BottomSheetBackdrop,
@@ -68,7 +69,6 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
       }}
       {...props}
       ref={bottomSheetModalRef}
-      index={1}
       backdropComponent={handleRenderBackDrop}
       snapPoints={snapPoints}
     >

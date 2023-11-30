@@ -36,7 +36,16 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
   });
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderBottomWidth: 1,
+        padding: 10,
+        borderColor: 'black',
+        marginBottom: 10,
+      }}
+    >
       <TextInput.Wrapper label="C">
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity

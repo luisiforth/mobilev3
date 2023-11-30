@@ -50,7 +50,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
   });
 
   return (
-    <View style={{ gap: 10, padding: 10 }}>
+    <View style={{ gap: 10 }}>
       <Select.Wrapper required label="Selecione um Produto">
         <Selects.Search
           item={queryProducts.data || []}
@@ -71,6 +71,10 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       <Select.Wrapper required label="Selecione um Defeito">
         <Selects.MultiSelect
           item={queryDefects.data || []}
+          placeholder="Escolha um defeito"
+          placeholderSearch={'Pesquisar ...'}
+          isSearched
+          values={methods.getValues('defects')}
           icon={() => (
             <AntDesign
               style={styles.icon}
@@ -86,6 +90,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
               c: 0,
               q: 0,
             }));
+
             methods.setValue('values', values);
           }}
           name="defects"
