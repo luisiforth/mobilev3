@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Controller, Control } from 'react-hook-form';
-import { StyleSheet, Keyboard } from 'react-native';
+import { StyleSheet, Keyboard, FlatListProps } from 'react-native';
 import { MultiSelect } from 'react-native-element-dropdown';
 
 type Props = {
@@ -17,6 +17,7 @@ type Props = {
   values: [];
   icon: (visible?: boolean) => JSX.Element | null | undefined;
   onValueChanged?: (val: any) => void;
+  flatProps?: Omit<FlatListProps<any>, 'renderItem' | 'data'>;
 };
 
 export function ControlledMultiSelect({
@@ -25,6 +26,7 @@ export function ControlledMultiSelect({
   icon,
   item,
   values,
+  flatProps,
   placeholder,
   isSearched,
   placeholderSearch,
@@ -51,7 +53,8 @@ export function ControlledMultiSelect({
             inputSearchStyle={styles.inputSearchStyle}
             iconStyle={styles.iconStyle}
             search={isSearched}
-            data={item.slice(0, 10)}
+            data={item}
+            flatListProps={flatProps}
             labelField="label"
             valueField="value"
             placeholder={placeholder}

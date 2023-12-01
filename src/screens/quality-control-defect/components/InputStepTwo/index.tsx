@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, memo } from 'react';
 import { Alert, TouchableOpacity, View, Text } from 'react-native';
 
 import { ControlledInput } from '@/components/ControlledInput';
@@ -38,12 +38,12 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
   return (
     <View
       style={{
+        borderBottomWidth: 1,
+        borderColor: 'black',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        borderBottomWidth: 1,
-        padding: 10,
-        borderColor: 'black',
         marginBottom: 10,
+        padding: 10,
       }}
     >
       <TextInput.Wrapper label="C">
@@ -145,3 +145,5 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
     </View>
   );
 };
+
+export default memo(InputTwoStep);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { Dimensions } from 'react-native';
 import {
@@ -46,4 +46,4 @@ export const StepTwo = ({ methods, onRequired }: StepProps) => {
   );
 };
 
-export default StepTwo;
+export default memo(StepTwo);

@@ -3,7 +3,9 @@ import { View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import { Selects } from '@/components/ControlledSelect';
+import Loading from '@/components/Loading';
 import { Select } from '@/components/Select';
+import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { useOnRequired } from '@/hooks/useOnRequired';
 import {
   getAllDefects,
@@ -22,6 +24,8 @@ interface StepProps {
 }
 export const StepOne = ({ methods, onRequired }: StepProps) => {
   const { filters } = useFilterStore();
+  const { data, nextPage, loading } = useInfiniteScroll();
+
   useOnRequired(['product', 'defects'], {
     methods,
     onRequired,
@@ -38,16 +42,16 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
     return optionProd;
   });
 
-  const queryDefects = useQuery('query_defect_rectif', async () => {
-    if (filters == null || filters == undefined) {
-      missingFilters(!!filters);
-    }
-    const result = await getAllDefects();
-    const optionProd = result
-      ? addLabelAndValue(result, 'DESCRICAO', 'ID')
-      : [];
-    return optionProd;
-  });
+  // const queryDefects = useQuery('query_defect_rectif', async () => {
+  //   if (filters == null || filters == undefined) {
+  //     missingFilters(!!filters);
+  //   }
+  //   const result = await getAllDefects();
+  //   const optionProd = result
+  //     ? addLabelAndValue(result, 'DESCRICAO', 'ID')
+  //     : [];
+  //   return optionProd;
+  // });
 
   return (
     <View style={{ gap: 10 }}>
@@ -70,10 +74,15 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       </Select.Wrapper>
       <Select.Wrapper required label="Selecione um Defeito">
         <Selects.MultiSelect
-          item={queryDefects.data || []}
+          item={data || []}
           placeholder="Escolha um defeito"
           placeholderSearch={'Pesquisar ...'}
           isSearched
+          flatProps={{
+            onEndReached: nextPage,
+            onEndReachedThreshold: 0.1,
+            ListFooterComponent: loading ? <Loading /> : null,
+          }}
           values={methods.getValues('defects')}
           icon={() => (
             <AntDesign
@@ -95,8 +104,6 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
           }}
           name="defects"
           control={methods.control}
-          placeholderSearch="Pesquisar ..."
-          placeholder="Escolha um produto"
         />
       </Select.Wrapper>
     </View>
