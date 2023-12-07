@@ -36,9 +36,9 @@ export function ControlledMultiSelect({
 
   useEffect(() => {
     const array = values?.map((v) => v.ID);
+    console.log(array);
     setSelected(array);
   }, [values]);
-
   return (
     <Controller
       name={name}

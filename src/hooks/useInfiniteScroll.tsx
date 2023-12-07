@@ -8,7 +8,7 @@ type TSelect = {
   DESCRICAO: string;
 };
 
-export async function getAllDefects(page: number, limit = 5) {
+export async function getAllDefects(page: number, limit = 10) {
   const res = await api.get<TSelect[]>(
     `v3/util/defeito/ativo?page=${page}&limit=${limit}`,
     {

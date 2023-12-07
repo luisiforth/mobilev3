@@ -246,6 +246,8 @@ export default function ControlQualityDefectLayout() {
       <Modal
         enablePanDownToClose={false}
         snapPoints={snapPoints}
+        enableHandlePanningGesture={false}
+        enableContentPanningGesture={false}
         handleIndicatorStyle={{ backgroundColor: 'transparent' }}
         ref={bottomSheetModalRef}
       >

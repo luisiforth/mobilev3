@@ -1,5 +1,6 @@
 import { useCallback, memo } from 'react';
-import { Alert, TouchableOpacity, View, Text } from 'react-native';
+import { Alert, View, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';

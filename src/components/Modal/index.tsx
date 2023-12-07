@@ -41,7 +41,13 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleRenderBackDrop = useCallback((props: any) => {
-    return <BottomSheetBackdrop {...props} />;
+    return (
+      <BottomSheetBackdrop
+        appearsOnIndex={3}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    );
   }, []);
 
   const handleDismiss = useCallback(() => {
