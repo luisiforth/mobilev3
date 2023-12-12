@@ -362,6 +362,7 @@ export default function AdvancedPieceLayout() {
           <View style={{ flexDirection: 'row' }}>
             <Button
               text="Apontar"
+              size="large"
               onPress={() =>
                 bottomSheetModalRef.current?.handlePresentModalPress()
               }

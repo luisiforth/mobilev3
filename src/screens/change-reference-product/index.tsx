@@ -1,14 +1,24 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { Alert, SectionList, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import {
+  Alert,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  ViewStyle,
+  TextStyle,
+  ImageStyle,
+} from 'react-native';
 import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
+import { ListItemEmpty } from '@/components/ListItemEmpty';
 import Loading from '@/components/Loading';
-import Modal, { ComportModalProps } from '@/components/Modal';
-import { TextInput } from '@/components/TextInput';
+import Table from '@/components/Table';
+import { COLORS } from '@/constants';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
+import { router } from 'expo-router';
 import { useTheme } from 'styled-components/native'; // Verifique a importação correta de useTheme
 import { api } from 'util/axios/axios';
 
@@ -17,11 +27,12 @@ import {
   postProductInReferenceURL,
   putProductInReferenceURL,
 } from './api-urls';
-import { CardRef } from './components/CardRef';
-import { handleButtonOptions, handleSectionOptions } from './functions';
 import { ProductionLineRequest } from './types';
 
-import * as S from './styles';
+export type TStyles = {
+  spaceCell: (index: number) => ViewStyle | TextStyle | ImageStyle;
+  cellSituation: (value: boolean) => ViewStyle | TextStyle | ImageStyle;
+};
 
 type ChangeReferenceProductLayout = {
   typeRoute: string | string[];
@@ -30,94 +41,35 @@ type ChangeReferenceProductLayout = {
 export default function ChangeReferenceProductLayout({
   typeRoute,
 }: ChangeReferenceProductLayout) {
+  const [selected, setSelected] = useState<ProductionLineRequest | null>(null);
   const { filters } = useFilterStore();
   const { credential } = useCredentialStore();
-  const navigation = useNavigation();
-  const [filteredItem, setFilteredItem] = useState<ProductionLineRequest[]>([]);
   const theme = useTheme();
-  const bottomSheetModalRef = useRef<ComportModalProps>(null);
-  const snapPoints = useMemo(() => ['40%', '88%'], []);
   const query_references = useQuery('query_reference', async () => {
-    // if (filters) return [];
+    if (!filters) return;
     const response = await api.get<ProductionLineRequest[]>(
       getChangeProductInReferenceURL(
-        filters?.unit.value as number,
-        filters?.line.value as number
+        filters.unit?.value as number,
+        filters.line?.value as number
       )
     );
     return response.data;
   });
 
-  const producaoArray: ProductionLineRequest[] = [];
-  const producaoEncerradaArray: ProductionLineRequest[] = [];
+  const handleDataSelect = (item: ProductionLineRequest) => {
+    return setSelected(item);
+  };
 
-  if (!query_references.isLoading && query_references.data) {
-    query_references.data.forEach((item) => {
-      if (item.FLAGDESCPCPITEM === 'PRODUÇÃO PAUSADA') {
-        producaoArray.push(item);
-      } else if (item.FLAGDESCPCPITEM === 'AGUARDANDO INÍCIO') {
-        producaoEncerradaArray.push(item);
-      }
-    });
-  }
-
-  const result = [
-    {
-      title: 'PRODUÇÃO PAUSADA',
-      data: producaoArray,
-    },
-    {
-      title: 'AGUARDANDO INÍCIO',
-      data: producaoEncerradaArray,
-    },
+  const title = [
+    'Situação',
+    'Seq. Produção',
+    'Referência',
+    'Descrição',
+    'Metragem Programada',
+    'índice de Correção(%)',
+    'Metragem Final',
+    'Plano',
   ];
-
-  const handleFilter = (value: number) => {
-    const filter = query_references.data?.filter(
-      (item) => item.IDPCPITEM == value
-    );
-
-    if (!filter) {
-      return Alert.alert('Dado não encontrado!', '');
-    }
-    setFilteredItem(filter!);
-    return bottomSheetModalRef.current?.handlePresentModalPress();
-  };
-
-  const RenderItem = ({ item }: { item: ProductionLineRequest }) => {
-    return (
-      <CardRef.Wrapper
-        color={handleSectionOptions(item.FLAGDESCPCPITEM, theme).color}
-        onPress={() => handleFilter(item.IDPCPITEM)}
-      >
-        <CardRef.Text title="Referência: " text={item.REFFICHAPROD} />
-        <CardRef.Text title="Desc. Ref: " text={item.DESCFICHAPROD} />
-        <CardRef.Text title="Formato: " text={item.DESFORMATO} />
-        <CardRef.Text title="Plano: " text={item.DESCPCP} />
-      </CardRef.Wrapper>
-    );
-  };
-
-  const RenderSectionHeader = ({
-    section,
-  }: {
-    data: ProductionLineRequest[];
-    title: string;
-  }) => {
-    return (
-      <CardRef.WrapperSection
-        color={handleSectionOptions(section.title, theme).color}
-      >
-        <CardRef.Text text={section.title} />
-        <CardRef.Icon
-          icon={
-            handleSectionOptions(section.title, theme)
-              .icon as keyof typeof Feather.glyphMap
-          }
-        />
-      </CardRef.WrapperSection>
-    );
-  };
 
   const handleSubmit = async () => {
     Alert.alert(
@@ -131,22 +83,24 @@ export default function ChangeReferenceProductLayout({
   };
 
   const handleFetch = async () => {
+    if (!filters) return;
+
     await api.put(
       putProductInReferenceURL({
-        idpcp: filteredItem[0]?.IDPCPITEM,
-        line: filters?.line.value as number,
+        idpcp: selected?.IDPCP as number,
+        line: filters.line?.value as number,
         type: Number(typeRoute),
-        unit: filters?.unit.value as number,
+        unit: filters.unit?.value as number,
       })
     );
 
     const response = await api.post(
       postProductInReferenceURL({
-        idFormat: filteredItem[0]?.IDFORMATO || 0,
-        idProduct: filteredItem[0]?.IDFICHAPROD || 0,
+        idFormat: selected?.IDFORMATO as number,
+        idProduct: selected?.IDFICHAPROD as number,
         idUser: credential?.userid as number,
-        line: filters?.line.value as number,
-        unit: filters?.unit.value as number,
+        line: filters.line?.value as number,
+        unit: filters.unit?.value as number,
       })
     );
 
@@ -155,95 +109,96 @@ export default function ChangeReferenceProductLayout({
     }
 
     Alert.alert('', `Registro enviado com sucesso!`);
-    return navigation.goBack();
+    return router.push('/changeReference');
   };
 
+  const styleColorRow = useCallback(
+    (id: number) => {
+      if (selected?.IDPCPITEM == id) {
+        return { backgroundColor: COLORS.gray[400] };
+      }
+      return { backgroundColor: COLORS.gray[100] };
+    },
+    [selected?.IDPCPITEM]
+  );
+
+  if (query_references.isLoading || query_references.isRefetching) {
+    return <Loading />;
+  }
   return (
-    <>
-      {query_references.isLoading || query_references.isFetching ? (
-        <Loading />
+    <View style={{ flex: 1 }}>
+      {!query_references.data ? (
+        <ListItemEmpty />
       ) : (
-        <>
-          <S.Root.Wrapper>
-            <SectionList
-              sections={result}
-              renderItem={RenderItem}
-              renderSectionHeader={RenderSectionHeader}
-              SectionSeparatorComponent={ListItemSeparator}
-              ItemSeparatorComponent={ListItemSeparator}
-              initialNumToRender={4}
-            />
-          </S.Root.Wrapper>
-          <Modal snapPoints={snapPoints} ref={bottomSheetModalRef}>
-            <CardRef.WrapperSection
-              color={
-                handleSectionOptions(filteredItem[0]?.FLAGDESCPCPITEM, theme)
-                  .color
-              }
-            >
-              <CardRef.Text text={filteredItem[0]?.FLAGDESCPCPITEM} />
-              <CardRef.Icon
-                icon={
-                  handleSectionOptions(filteredItem[0]?.FLAGDESCPCPITEM, theme)
-                    .icon as keyof typeof Feather.glyphMap
-                }
-              />
-            </CardRef.WrapperSection>
-            <S.Root.WrapperModal>
-              <TextInput.Wrapper label="Referência">
-                <TextInput.Content
-                  editable={false}
-                  multiline
-                  value={filteredItem[0]?.REFFICHAPROD + ''}
-                />
-              </TextInput.Wrapper>
-              <TextInput.Wrapper label="Desc. Referência">
-                <TextInput.Content
-                  editable={false}
-                  multiline
-                  value={filteredItem[0]?.DESCFICHAPROD}
-                />
-              </TextInput.Wrapper>
-              <TextInput.Wrapper label="Metragem Programada">
-                <TextInput.Content
-                  editable={false}
-                  value={filteredItem[0]?.METRAPROGRAPCPITEM + ' m²'}
-                />
-              </TextInput.Wrapper>
-              <TextInput.Wrapper label="Índice de Correção(%)">
-                <TextInput.Content
-                  editable={false}
-                  value={filteredItem[0]?.CORRECAOPCPITEM + '%'}
-                />
-              </TextInput.Wrapper>
-              <TextInput.Wrapper label="Metragem Final">
-                <TextInput.Content
-                  editable={false}
-                  value={filteredItem[0]?.METRAFINALPCPITEM + ' m²'}
-                />
-              </TextInput.Wrapper>
-              <TextInput.Wrapper label="Plano">
-                <TextInput.Content
-                  editable={false}
-                  multiline
-                  value={filteredItem[0]?.DESCPCP}
-                />
-              </TextInput.Wrapper>
-              <View style={{ flexDirection: 'row' }}>
-                <Button
-                  text={handleButtonOptions(typeRoute as string, theme).text}
-                  color={handleButtonOptions(typeRoute as string, theme).color}
-                  onPress={handleSubmit}
-                />
-              </View>
-            </S.Root.WrapperModal>
-          </Modal>
-        </>
+        <Table<ProductionLineRequest>
+          data={query_references.data as []}
+          head={title}
+          renderItem={({ index, item }) => {
+            return (
+              <TouchableOpacity
+                style={[styles.row, styleColorRow(item.IDPCPITEM)]}
+                onPress={() => handleDataSelect(item)}
+                activeOpacity={0.8}
+                key={index}
+              >
+                <Text
+                  style={[styles.cell, styles.cellSituation(item.FLAGPCPITEM)]}
+                >
+                  {item.FLAGDESCPCPITEM}
+                </Text>
+                <Text style={styles.cell}>{item.SEQPRODPCPITEM}</Text>
+                <Text style={styles.cell}>{item.REFFICHAPROD}</Text>
+                <Text style={styles.cell}>{item.DESCFICHAPROD}</Text>
+                <Text style={styles.cell}>{item.METRAPROGRAPCPITEM}</Text>
+                <Text style={styles.cell}>{item.CORRECAOPCPITEM}</Text>
+                <Text style={styles.cell}>{item.METRAFINALPCPITEM}</Text>
+                <Text style={styles.cell}>{item.DESCPCP}</Text>
+              </TouchableOpacity>
+            );
+          }}
+          setState={setSelected}
+          state={selected}
+        />
       )}
-    </>
+      <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <Button
+          icon={
+            <Feather
+              name={Number(typeRoute) == 1 ? 'save' : 'pause'}
+              color={'white'}
+              size={25}
+            />
+          }
+          size="large"
+          text={Number(typeRoute) == 1 ? 'Salvar' : 'Pausar'}
+          onPress={handleSubmit}
+          color={Number(typeRoute) == 1 ? '' : theme.colors.orange.button}
+        />
+      </View>
+    </View>
   );
 }
 
-export const ListItemSeparator = () => {
-  return <View style={{ height: 10 }} />;
-};
+export const styles = StyleSheet.create<TStyles | any>({
+  cell: {
+    color: 'black',
+    fontSize: 16,
+    alignContent: 'center',
+    textAlign: 'center',
+    width: 300,
+  },
+  cellSituation: (isActive: boolean): ViewStyle => ({
+    backgroundColor: isActive ? COLORS.orange.situation : 'transparent',
+    padding: 14,
+  }),
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+  },
+});

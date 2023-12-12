@@ -181,6 +181,7 @@ export default function HomeLayout() {
           </Select.Wrapper>
           <View style={{ flexDirection: 'row' }}>
             <Button
+              size="large"
               text="Filtrar"
               isLoading={isLoading}
               onPress={handleSubmit(onSubmit)}

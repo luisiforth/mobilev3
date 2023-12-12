@@ -14,7 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { router } from 'expo-router';
 // import { api } from 'util/axios/axios';
 
-import { api } from 'util/axios/axios';
+// import { api } from 'util/axios/axios';
 
 import { schema } from './schema';
 
@@ -120,6 +120,7 @@ export default function LoginLayout() {
       <View style={{ flexDirection: 'row' }}>
         <Button
           text="Entrar"
+          size="large"
           onPress={handleSubmit(onSubmit)}
           isLoading={isLoading || !endpoint}
         />

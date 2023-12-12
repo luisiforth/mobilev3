@@ -7,8 +7,8 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { useTheme } from 'styled-components/native';
 
 export default function HomeLayout() {
-  const [isPortrait, setIsPortrait] = useState(false);
   const navigation = useNavigation();
+  const [isPortrait, setIsPortrait] = useState(false);
   async function changeScreenOrientation() {
     setIsPortrait((prev) => !prev);
 

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
   FlatList,
   ImageStyle,
@@ -7,22 +8,32 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  Text,
+  ListRenderItem,
 } from 'react-native';
 
-type TTableOption = {
+import { COLORS } from '@/constants';
+
+type TTableOption<ItemT> = {
   data: [];
   head: string[];
-  children: React.ReactNode;
+  renderItem: ListRenderItem<ItemT> | null | undefined;
+  setState: (value: any) => void;
+  state: any;
 };
-
-export default function table({ data, head, chil }: TTableOption) {
+export type TStyles = {
+  spaceCell: (index: number) => ViewStyle | TextStyle | ImageStyle;
+  cellSituation: (value: boolean) => ViewStyle | TextStyle | ImageStyle;
+};
+function Table<ItemT>(props: TTableOption<ItemT>) {
+  const { renderItem, data, head } = props;
   return (
     <ScrollView
       disableIntervalMomentum
       horizontal
       showsHorizontalScrollIndicator={false}
     >
-      <TouchableOpacity activeOpacity={0.8} style={{ zIndex: 0 }}>
+      <TouchableOpacity activeOpacity={0.9} style={{ zIndex: 0 }}>
         <View style={styles.header}>
           {head.map((value, index) => (
             <Text key={index} style={styles.headerItem}>
@@ -30,54 +41,44 @@ export default function table({ data, head, chil }: TTableOption) {
             </Text>
           ))}
         </View>
-        <View style={{ flex: 1 }}>
-          <FlatList
-            style={{ flex: 1, backgroundColor: 'yellow' }}
-            data={data}
-            // ListEmptyComponent={ListItemEmpty}
-            renderItem={children}
-          />
-        </View>
+        <FlatList<ItemT>
+          style={{ flex: 1 }}
+          data={data || []}
+          renderItem={renderItem}
+        />
       </TouchableOpacity>
     </ScrollView>
   );
 }
 
-export const styles = StyleSheet.create({
-  cell: {
-    color: 'black',
-    flex: 1,
-    fontSize: 14,
-    textAlign: 'center',
-    width: 200,
-  },
+export default memo(Table) as <ItemT>(
+  props: TTableOption<ItemT>
+) => JSX.Element;
+
+export const styles = StyleSheet.create<TStyles | any>({
   cellSituation: (isActive: boolean): ViewStyle => ({
-    backgroundColor: isActive ? 'red' : 'green',
+    backgroundColor: isActive ? COLORS.orange.situation : 'transparent',
+    padding: 14,
   }),
   header: {
     alignItems: 'center',
+    backgroundColor: COLORS.primary[400],
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 10,
   },
   headerItem: {
     borderColor: 'black',
-    color: 'black',
+    color: 'white',
     flex: 1,
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
-    width: 200,
+    width: 300,
   },
   row: {
-    // flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
+    height: 50,
     justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'black',
-    paddingVertical: 10,
   },
-  spaceCell: (index: number) => ({
-    backgroundColor: index % 2 && 'gray',
-  }),
 });

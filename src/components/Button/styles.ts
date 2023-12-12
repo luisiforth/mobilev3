@@ -23,22 +23,18 @@ const Spinner = styled.ActivityIndicator`
 
 const TextModifiers = {
   large: (theme: DefaultTheme) => css`
-    padding: 24px;
     font-size: ${theme.font.sizes.lg};
   `,
   medium: (theme: DefaultTheme) => css`
-    padding: 16px;
     font-size: ${theme.font.sizes.md};
   `,
 
-  small: () => css`
-    padding: 12px;
-  `,
+  small: () => css``,
 };
 
 const Text = styled.Text<TText>`
   ${({ size, theme }) => css`
-    margin: 0 auto;
+    /* margin: 0 auto; */
     color: white;
 
     ${!!size && TextModifiers[size](theme)};
