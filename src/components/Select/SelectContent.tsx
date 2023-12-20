@@ -81,7 +81,6 @@ function Select(props: TMultiSelect) {
 
     if (!isMulti) return setValue(selected[0]);
     setValue(selected);
-
     if (onChange) return onChange(selected);
   }, [selected]);
 

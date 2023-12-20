@@ -105,7 +105,6 @@ export default function ControlQualityDefectLayout() {
 
   const styleColorRow = useCallback(
     (id: number) => {
-      console.log(id);
       if (selected?.ID == id) {
         return { backgroundColor: COLORS.gray[400] };
       }

@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 
 import { Select } from '@/components/Select';
 import { useOnRequired } from '@/hooks/useOnRequired';
+// import { item } from '@/screens/advanced-piece/utils/object_item';
 import {
   getAllDefects,
   getAllProducts,
@@ -67,14 +68,25 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
           placeholder="Selecione ou pesquise um Defeito"
           setValue={(props) => methods.setValue('defects', props)}
           onChange={(props) => {
+            const values = methods.getValues('values');
             const result = props?.map(
               (v: { ID: number; DESCRICAO: string }) => ({
-                c: 0,
+                c:
+                  values.find((val: { id: number }) => val?.id == v.ID)?.c || 0,
                 id: v.ID,
                 label: v.DESCRICAO,
-                q: 0,
+                q:
+                  values.find((val: { id: number }) => val?.id == v.ID)?.q || 0,
               })
             );
+
+            // const areEqual = result.every(
+            //   (item: { id: any }, index: string | number) => {
+            //     return item.id === values[index]?.id;
+            //   }
+            // );
+
+            // if (areEqual) return methods.setValue('values', values);
             methods.setValue('values', result);
           }}
           isMulti

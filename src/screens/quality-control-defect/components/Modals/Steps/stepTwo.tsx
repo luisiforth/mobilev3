@@ -21,7 +21,10 @@ const { width } = Dimensions.get('screen');
 
 export const StepTwo = ({ methods, onRequired }: StepProps) => {
   return (
-    <ScrollView style={{ height: width * 0.38, zIndex: 100 }}>
+    <ScrollView
+      keyboardShouldPersistTaps={'handled'}
+      style={{ height: width * 0.38, zIndex: 100 }}
+    >
       {methods.getValues('values')?.map((v: TDefects, index: number) => (
         <>
           <TextInput.Wrapper required label={v.label} />
