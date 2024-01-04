@@ -4,7 +4,7 @@ import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
 type configProps<T extends FieldValues> = {
   methods: UseFormReturn<T>;
   onRequired: (value: unknown) => boolean;
-  isAllZero?: boolean;
+  myRule?: () => boolean;
 };
 
 export function useOnRequired<T extends FieldValues>(
@@ -17,19 +17,12 @@ export function useOnRequired<T extends FieldValues>(
       (element: string[] | string | number | undefined | any) => {
         if (element == undefined) return false;
         if (element == null) return false;
+        if (config.myRule) return config.myRule();
         if (Object.values(element).every((v) => v == '')) return false;
-        if (
-          config.isAllZero &&
-          ((element.c == 0 && element.q == 0) ||
-            (element.c == undefined && element.q == undefined))
-        ) {
-          return false;
-        }
-
         if (Array.isArray(element)) return !!element.length;
         if (typeof element === 'object') return element != null;
         if (typeof element === 'string') return !!element.length;
-        return element >= 0;
+        return element > 0;
       }
     );
   };

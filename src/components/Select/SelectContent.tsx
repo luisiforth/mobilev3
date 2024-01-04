@@ -2,22 +2,18 @@ import React, { useCallback, memo, useState, useEffect } from 'react';
 import {
   Text,
   TouchableOpacity,
-  StyleSheet,
   TextInput,
   View,
-  // Modal,
   FlatList,
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { COLORS } from '@/constants';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import {
-  BottomSheetFlatList,
-  // TouchableOpacity as TouchableOpacityModal,
-} from '@gorhom/bottom-sheet';
 import { BottomSheetFlatListProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetScrollable/types';
+import { FlashList } from '@shopify/flash-list';
 
 import Loading from '../Loading';
 // import Modal, { ComportModalProps } from '../Modal';
@@ -52,7 +48,7 @@ function Select(props: TMultiSelect) {
     onChange,
     // flatListProps,
   } = props;
-
+  const { styles } = useStyles(stylesheet);
   const [visible, setVisible] = useState(false);
   const [plus, setPlus] = useState(12);
   const [data, setData] = useState<TSelect[]>([]);
@@ -229,7 +225,7 @@ function Select(props: TMultiSelect) {
                 style={styles.input}
               />
             )}
-            <BottomSheetFlatList
+            <FlatList
               data={data}
               ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
               ListEmptyComponent={<Loading />}
@@ -268,7 +264,7 @@ function Select(props: TMultiSelect) {
   );
 }
 
-export const styles = StyleSheet.create({
+export const stylesheet = createStyleSheet((theme) => ({
   icon: {
     paddingHorizontal: 10,
   },
@@ -302,6 +298,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
   },
-});
+}));
 
 export default memo(Select);

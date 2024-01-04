@@ -7,6 +7,7 @@ import {
   StorageDefectsProps,
   StorageEndPointProps,
   StorageFilterProps,
+  StorageTimeProps,
   StorageTokenProps,
 } from './types';
 
@@ -64,6 +65,20 @@ export const useTokenStore = create<StorageTokenProps>()(
       setDeleteToken: () => set({ token: undefined }),
       setToken: (token) => set({ token: token }),
       token: undefined,
+    }),
+    {
+      name: 'token-storage',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useTimeStore = create<StorageTimeProps>()(
+  persist(
+    (set) => ({
+      setDeleteTime: () => set({ time: undefined }),
+      setTime: (time) => set({ time: time }),
+      time: undefined,
     }),
     {
       name: 'token-storage',

@@ -76,7 +76,6 @@ export default function HomeLayout() {
       enabled: !!credential?.userid,
     }
   );
-
   const {
     mutate,
     data: response_line,

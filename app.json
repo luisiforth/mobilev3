@@ -38,6 +38,12 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      [
+        "expo-updates",
+        {
+          "username": "account-username"
+        }
+      ],
       "expo-router",
       [
         "expo-screen-orientation",

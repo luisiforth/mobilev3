@@ -41,16 +41,16 @@ export default function ConfigPageLayout() {
 
   const ENVs = [
     {
-      label: 'ELIZABETH',
-      value: process.env.EXPO_PUBLIC_ELIZABETH_API_URL,
-    },
-    {
       label: 'DEXCO',
       value: process.env.EXPO_PUBLIC_DEXCO_API_URL,
     },
     {
-      label: 'TESTE',
+      label: 'TESTE - DEXCO',
       value: process.env.EXPO_PUBLIC_TESTE_API_URL,
+    },
+    {
+      label: 'TESTE - INTERNO',
+      value: process.env.EXPO_PUBLIC_INTERNALTEST_DEXCO_API_URL,
     },
   ];
 

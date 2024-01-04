@@ -12,7 +12,7 @@ import { useEndPointStore } from '@/store/filterStore';
 import { Feather } from '@expo/vector-icons';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { router } from 'expo-router';
-// import { api } from 'util/axios/axios';
+import { api } from 'util/axios/axios';
 
 // import { api } from 'util/axios/axios';
 
@@ -48,6 +48,7 @@ export default function LoginLayout() {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      // console.log(error?.response.data.message);
       console.log('Erro', 'Não foi possível realizar o login');
     }
 

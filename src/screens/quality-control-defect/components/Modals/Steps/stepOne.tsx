@@ -1,8 +1,10 @@
+import { useCallback, useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import { Select } from '@/components/Select';
+import SelectTest from '@/components/Select/selectTest';
 import { useOnRequired } from '@/hooks/useOnRequired';
 // import { item } from '@/screens/advanced-piece/utils/object_item';
 import {
@@ -20,6 +22,39 @@ interface StepProps {
 }
 
 export const StepOne = ({ methods, onRequired }: StepProps) => {
+  const [selectedDefects, setSelectedDefects] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const handleSelectedItemsChange = useCallback(
+    (newSelectedItems: any) => {
+      setSelectedDefects(newSelectedItems);
+      methods.setValue('defects', newSelectedItems);
+
+      const values = methods.getValues('values');
+      const result = newSelectedItems?.map(
+        (v: { ID: number; DESCRICAO: string }) => ({
+          c: values.find((val: { id: number }) => val?.id == v.ID)?.c || 0,
+          id: v.ID,
+          label: v.DESCRICAO,
+          q: values.find((val: { id: number }) => val?.id == v.ID)?.q || 0,
+        })
+      );
+
+      methods.setValue('values', result);
+    },
+    [methods]
+  );
+  const handleSelectedItemsChangeProduct = useCallback(
+    (newSelectedItems: any) => {
+      setSelectedProducts(newSelectedItems);
+      methods.setValue('product', newSelectedItems);
+    },
+    [methods]
+  );
+
+  useEffect(() => {
+    setSelectedDefects(methods.getValues('defects'));
+  }, [methods.getValues('defects')]);
+
   const { filters } = useFilterStore();
   useOnRequired(['product', 'defects'], {
     methods,
@@ -47,20 +82,46 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       : [];
     return optionProd;
   });
-
   return (
     <View style={{ gap: 10 }}>
       <Select.Wrapper required label="Produto">
-        <Select.Select
+        <SelectTest
+          isSearch={true}
+          isMulti={false}
+          value={selectedProducts}
+          placeholder="Selecione ou pesquise um Produto"
+          data={queryProducts.data || []}
+          onChange={handleSelectedItemsChangeProduct}
+          isLoading={queryProducts.isLoading}
+        />
+      </Select.Wrapper>
+      <Select.Wrapper required label="Produto">
+        <SelectTest
+          isSearch={true}
+          isMulti={true}
+          value={selectedDefects}
+          placeholder="Selecione ou pesquise um Defeito"
+          data={queryDefects.data || []}
+          onChange={handleSelectedItemsChange}
+          isLoading={queryDefects.isLoading}
+        />
+      </Select.Wrapper>
+    </View>
+  );
+};
+
+{
+  /* <Select.Select
           isLoading={queryProducts.isLoading}
           item={queryProducts.data || []}
           value={methods.getValues('product')}
           placeholder="Selecione ou pesquise um Produto"
           setValue={(props) => methods.setValue('product', props)}
           isSearch
-        />
-      </Select.Wrapper>
-      <Select.Wrapper required label="Defeito">
+        /> */
+}
+{
+  /* <Select.Wrapper required label="Defeito">
         <Select.Select
           isLoading={queryDefects.isLoading}
           item={queryDefects.data || []}
@@ -92,7 +153,5 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
           isMulti
           isSearch
         />
-      </Select.Wrapper>
-    </View>
-  );
-};
+      </Select.Wrapper> */
+}

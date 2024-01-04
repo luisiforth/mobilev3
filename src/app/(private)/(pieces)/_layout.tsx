@@ -1,10 +1,10 @@
+import { TouchableOpacity } from 'react-native';
+
 import { Feather } from '@expo/vector-icons';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { useTheme } from 'styled-components/native';
 
 export default function HomeLayout() {
-  const navigation = useNavigation();
-
   const theme = useTheme();
   return (
     <Stack
@@ -22,12 +22,13 @@ export default function HomeLayout() {
         name="pieces"
         options={{
           headerLeft: () => (
-            <Feather
-              name="arrow-left"
-              onPress={() => navigation.goBack()}
-              color={'black'}
-              size={25}
-            />
+            <TouchableOpacity
+              activeOpacity={1}
+              hitSlop={35}
+              onPress={() => router.back()}
+            >
+              <Feather name="arrow-left" color={'black'} size={25} />
+            </TouchableOpacity>
           ),
 
           title: 'Peça Adiantada',
@@ -39,8 +40,7 @@ export default function HomeLayout() {
           headerLeft: () => (
             <Feather
               name="arrow-left"
-              //@ts-ignore
-              onPress={() => navigation.navigate('pieces')}
+              onPress={() => router.back()}
               color={'black'}
               size={25}
             />

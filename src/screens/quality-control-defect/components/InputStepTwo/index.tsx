@@ -31,16 +31,24 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
   }, []);
 
   useOnRequired([`values[${index}]`], {
-    isAllZero: true,
     methods,
     onRequired,
+    myRule() {
+      const values = methods.getValues(`values`);
+
+      return values.every(
+        (value: { q: number; c: number }) => value.q > 0 || value.c > 0
+      );
+    },
   });
 
   return (
     <View
+      key={index}
       style={{
         borderBottomWidth: 1,
         borderColor: 'black',
+        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginBottom: 10,

@@ -8,15 +8,13 @@ import React, {
 import { SubmitHandler } from 'react-hook-form';
 import {
   Alert,
-  FlatList,
-  ImageStyle,
+  Pressable,
   ScrollView,
-  TextStyle,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from 'react-native';
-import { StyleSheet, Text } from 'react-native';
+import { Text } from 'react-native';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
@@ -27,6 +25,7 @@ import StepModal from '@/components/StepModal';
 import { COLORS } from '@/constants';
 import { useCredentialStore, useFilterStore } from '@/store/filterStore';
 import Feather from '@expo/vector-icons/Feather';
+import { FlashList } from '@shopify/flash-list';
 import { AxiosError } from 'axios';
 import * as Device from 'expo-device';
 import { useTheme } from 'styled-components/native';
@@ -39,14 +38,10 @@ import { StepOne, StepTwo, StepThree, schema } from './components/Modals';
 import { TItem } from './types';
 import { getDefectRectify } from './utils';
 
-export type TStyles = {
-  spaceCell: (index: number) => ViewStyle | TextStyle | ImageStyle;
-  cellSituation: (value: boolean) => ViewStyle | TextStyle | ImageStyle;
-};
-
 type TSchema = yup.InferType<typeof schema>;
 
 export default function ControlQualityDefectLayout() {
+  const { styles } = useStyles(stylesheet);
   const [selected, setSelected] = useState<TItem | null>(null);
   const { credential } = useCredentialStore();
   const bottomSheetModalRef = useRef<ComportModalProps>(null);
@@ -91,7 +86,7 @@ export default function ControlQualityDefectLayout() {
         ID: credential?.userid,
       },
     };
-
+    console.log(body);
     try {
       await api.post('v3/retifica/defeito', body);
       queryDefects.refetch();
@@ -189,8 +184,8 @@ export default function ControlQualityDefectLayout() {
                 </Text>
               ))}
             </View>
-            <FlatList
-              style={{ flex: 1 }}
+            <FlashList
+              estimatedItemSize={100}
               data={queryDefects.data}
               renderItem={({ item, index }) => {
                 return (
@@ -251,12 +246,16 @@ export default function ControlQualityDefectLayout() {
         handleIndicatorStyle={{ backgroundColor: 'transparent' }}
         ref={bottomSheetModalRef}
       >
-        <Feather
-          name="x"
-          size={35}
+        <Pressable
+          hitSlop={20}
           onPress={() => bottomSheetModalRef.current?.handleDismiss()}
-          style={{ alignSelf: 'flex-end', marginRight: 20 }}
-        />
+        >
+          <Feather
+            name="x"
+            size={35}
+            style={{ alignSelf: 'flex-end', marginRight: 20 }}
+          />
+        </Pressable>
         <View style={{ padding: 10, gap: 20 }}>
           <StepModal
             onSubmit={onSubmit}
@@ -269,20 +268,20 @@ export default function ControlQualityDefectLayout() {
   );
 }
 
-export const styles = StyleSheet.create<TStyles | any>({
+export const stylesheet = createStyleSheet((theme) => ({
   cell: {
     color: 'black',
     fontSize: 16,
     textAlign: 'center',
     width: 200,
   },
-  cellSituation: (isActive: boolean): ViewStyle => ({
-    backgroundColor: isActive ? COLORS.orange.situation : 'transparent',
+  cellSituation: (isActive: boolean) => ({
+    backgroundColor: isActive ? theme.colors.orange.button : 'transparent',
     padding: 14,
   }),
   header: {
     alignItems: 'center',
-    backgroundColor: COLORS.primary[400],
+    backgroundColor: theme.colors.primary[400],
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 10,
@@ -301,4 +300,4 @@ export const styles = StyleSheet.create<TStyles | any>({
     height: 50,
     justifyContent: 'center',
   },
-});
+}));

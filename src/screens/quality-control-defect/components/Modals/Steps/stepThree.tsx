@@ -10,9 +10,17 @@ interface StepProps {
   onRequired: (value?: unknown) => boolean;
 }
 export const StepThree = ({ methods, onRequired }: StepProps) => {
+  // const handleFn = () => {};
+
   useOnRequired(['sample', 'tone'], {
     methods,
+    myRule() {
+      if (Number(methods.getValues('sample')) == 0) return false;
+      if (Number(methods.getValues('tone')) == 0) return false;
+      return true;
+    },
     onRequired,
+    // myRule: handleFn(),
   });
 
   return (

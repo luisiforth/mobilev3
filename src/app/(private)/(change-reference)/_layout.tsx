@@ -1,12 +1,12 @@
 import { useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { Stack, useNavigation } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useTheme } from 'styled-components/native';
 export default function HomeLayout() {
-  const navigation = useNavigation();
   const [isPortrait, setIsPortrait] = useState(false);
   async function changeScreenOrientation() {
     setIsPortrait((prev) => !prev);
@@ -37,12 +37,13 @@ export default function HomeLayout() {
         name="changeReference"
         options={{
           headerLeft: () => (
-            <Feather
-              name="arrow-left"
-              onPress={() => navigation.goBack()}
-              color={'black'}
-              size={25}
-            />
+            <TouchableOpacity
+              activeOpacity={1}
+              hitSlop={35}
+              onPress={() => router.back()}
+            >
+              <Feather name="arrow-left" color={'black'} size={25} />
+            </TouchableOpacity>
           ),
           headerRight: () => (
             <MaterialCommunityIcons
@@ -59,13 +60,13 @@ export default function HomeLayout() {
         name="reference/[ref]"
         options={{
           headerLeft: () => (
-            <Feather
-              name="arrow-left"
-              //@ts-ignore
-              onPress={() => navigation.navigate('changeReference')}
-              color={'black'}
-              size={25}
-            />
+            <TouchableOpacity
+              activeOpacity={1}
+              hitSlop={35}
+              onPress={() => router.back()}
+            >
+              <Feather name="arrow-left" color={'black'} size={25} />
+            </TouchableOpacity>
           ),
           title: 'Escolha a Referência',
         }}

@@ -39,6 +39,11 @@ export interface StorageTokenProps {
   setDeleteToken: () => void;
   setToken: (token: string) => void;
 }
+export interface StorageTimeProps {
+  time: undefined | string;
+  setDeleteTime: () => void;
+  setTime: (time: string) => void;
+}
 
 export interface StorageEndPointProps {
   endpoint: string;

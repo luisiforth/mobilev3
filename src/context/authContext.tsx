@@ -1,10 +1,11 @@
-import { ReactNode, createContext, useEffect } from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 import { Alert } from 'react-native';
 
 import { useProtectedRouter } from '@/hooks/useProtectedRouter';
 import {
   useCredentialStore,
   useFilterStore,
+  useTimeStore,
   useTokenStore,
 } from '@/store/filterStore';
 import axios from 'axios';
@@ -28,10 +29,11 @@ type AuthProviderProps = {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const { token, setToken, setDeleteToken } = useTokenStore();
+  const { time, setTime, setDeleteTime } = useTimeStore();
   const { setUser } = useCredentialStore();
   const { setFilter } = useFilterStore();
-  // const [userToken, setUserToken] = useState(token);
   useProtectedRouter(token);
+
   function updateToken(token: string) {
     api.defaults.headers.common.Authorization = `Bearer ${token}`;
     setToken(token);
@@ -51,6 +53,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
 
       updateToken(request.data.TOKEN);
+      setTime(request.data.EXPIRATION);
       setToken(request.data.TOKEN);
 
       const data = {
@@ -73,10 +76,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   function signOut() {
     setDeleteToken();
-    // setUserToken('');
     setFilter({ line: null, unit: null });
     setUser({ userid: null, username: null });
   }
+
+  function useTokenExpiration() {
+    if (!time) return;
+    const timeToken = new Date(time).getTime() / 1000;
+    const actualDate = new Date().getTime() / 1000;
+    // console.log(timeToken >= actualDate);
+    if (timeToken >= actualDate) return signOut();
+  }
+
+  api.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    (error) => {
+      if (error.response.status === 401) {
+        console.log('teste');
+      }
+      return error;
+    }
+  );
 
   return (
     <AuthContext.Provider value={{ signIn, signOut }}>

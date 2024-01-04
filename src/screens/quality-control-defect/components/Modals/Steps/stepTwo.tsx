@@ -1,9 +1,15 @@
 import { memo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Dimensions } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View } from 'react-native';
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from 'react-native-gesture-handler';
+import { UnistylesRuntime } from 'react-native-unistyles';
 
+import SelectTest from '@/components/Select/selectTest';
 import { TextInput } from '@/components/TextInput';
+import { FlashList } from '@shopify/flash-list';
 
 import { InputTwoStep } from '../../InputStepTwo';
 
@@ -17,25 +23,42 @@ type TDefects = {
   ID: number;
 };
 
-const { width } = Dimensions.get('screen');
-
 export const StepTwo = ({ methods, onRequired }: StepProps) => {
+  console.log();
   return (
-    <ScrollView
-      keyboardShouldPersistTaps={'handled'}
-      style={{ height: width * 0.38, zIndex: 100 }}
-    >
-      {methods.getValues('values')?.map((v: TDefects, index: number) => (
-        <>
-          <TextInput.Wrapper required label={v.label} />
-          <InputTwoStep
-            onRequired={onRequired}
-            methods={methods}
-            index={index}
-          />
-        </>
-      ))}
-    </ScrollView>
+    <View style={{ height: UnistylesRuntime.screen.height * 0.65 }}>
+      {/* <FlashList
+        estimatedItemSize={100}
+        data={methods.getValues('values')}
+        renderItem={({ item, index, target, extraData }) => {
+          console.log({ index, target, extraData });
+          return (
+            <TouchableWithoutFeedback>
+              <InputTwoStep
+                onRequired={onRequired}
+                methods={methods}
+                index={index}
+              />
+            </TouchableWithoutFeedback>
+            );
+          }}
+        /> */}
+      <ScrollView
+        keyboardShouldPersistTaps={'always'}
+        style={{ height: UnistylesRuntime.screen.height * 0.65, zIndex: 100 }}
+      >
+        {methods.getValues('values')?.map((v: TDefects, index: number) => (
+          <TouchableWithoutFeedback style={{ flexWrap: 'wrap' }} key={index}>
+            <TextInput.Wrapper required label={v.label} />
+            <InputTwoStep
+              onRequired={onRequired}
+              methods={methods}
+              index={index}
+            />
+          </TouchableWithoutFeedback>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
