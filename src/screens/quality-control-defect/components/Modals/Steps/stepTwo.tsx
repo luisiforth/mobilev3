@@ -7,9 +7,7 @@ import {
 } from 'react-native-gesture-handler';
 import { UnistylesRuntime } from 'react-native-unistyles';
 
-import SelectTest from '@/components/Select/selectTest';
 import { TextInput } from '@/components/TextInput';
-import { FlashList } from '@shopify/flash-list';
 
 import { InputTwoStep } from '../../InputStepTwo';
 
@@ -24,7 +22,6 @@ type TDefects = {
 };
 
 export const StepTwo = ({ methods, onRequired }: StepProps) => {
-  console.log();
   return (
     <View style={{ height: UnistylesRuntime.screen.height * 0.65 }}>
       {/* <FlashList

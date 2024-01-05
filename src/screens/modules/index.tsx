@@ -60,6 +60,7 @@ export default function HomeLayout() {
     if (!filters) {
       return bottomSheetModalRefShow.current?.handlePresentModalPress();
     }
+    console.log(getDefects(filters.unit as unknown as number));
     return getDefects(filters.unit as unknown as number);
   });
 

@@ -80,13 +80,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser({ userid: null, username: null });
   }
 
-  function useTokenExpiration() {
-    if (!time) return;
-    const timeToken = new Date(time).getTime() / 1000;
-    const actualDate = new Date().getTime() / 1000;
-    // console.log(timeToken >= actualDate);
-    if (timeToken >= actualDate) return signOut();
-  }
+  // function useTokenExpiration() {
+  //   if (!time) return;
+  //   const timeToken = new Date(time).getTime() / 1000;
+  //   const actualDate = new Date().getTime() / 1000;
+  //   // console.log(timeToken >= actualDate);
+  //   if (timeToken >= actualDate) return signOut();
+  // }
 
   api.interceptors.response.use(
     (response) => {
@@ -94,7 +94,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     },
     (error) => {
       if (error.response.status === 401) {
-        console.log('teste');
+        signOut();
       }
       return error;
     }

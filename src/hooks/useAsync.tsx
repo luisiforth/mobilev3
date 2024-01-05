@@ -39,7 +39,7 @@ export default function useAsync() {
       const response = await api.get<OptionProps[]>(
         `/v1/util/defeito/${0}/${0}`
       );
-
+      console.log(await response.data);
       const defect = response.data.map((value) => ({
         label: value.DESCDEFEITO,
         value: value.IDDEFEITO,

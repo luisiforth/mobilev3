@@ -39,7 +39,7 @@ export const StepThree = ({ methods, onRequired }: StepProps) => {
           name="tone"
         />
       </TextInput.Wrapper>
-      <TextInput.Wrapper label="Tonalindade/Lote">
+      <TextInput.Wrapper label="Tonalidade/Lote">
         <ControlledInput control={methods.control} name="tonality" />
       </TextInput.Wrapper>
     </View>

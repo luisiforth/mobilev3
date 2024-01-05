@@ -18,7 +18,7 @@ export default function CustomDrawer(props: DrawerContentComponentProps) {
   const { signOut } = useAuth();
 
   const handleAttAlert = useCallback(() => {
-    Alert.alert('Atualização', 'Versão: 2 \n TESTE TESTE');
+    Alert.alert('Atualização', 'Versão: 2 Alteração no sistema');
   }, []);
 
   const handleSignOut = useCallback(() => {
