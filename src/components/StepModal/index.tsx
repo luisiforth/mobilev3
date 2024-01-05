@@ -51,7 +51,7 @@ export default function StepModal<
     handleSubmit,
     formState: { errors },
   } = methods;
-
+  console.log(methods.formState.errors);
   const componentElement = steps.map((Component) => (
     <>
       <Component

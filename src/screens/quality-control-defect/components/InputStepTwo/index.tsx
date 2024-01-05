@@ -50,6 +50,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
         borderColor: 'black',
         flex: 1,
         flexDirection: 'row',
+        flexWrap: 'wrap',
         justifyContent: 'space-around',
         marginBottom: 10,
         padding: 10,

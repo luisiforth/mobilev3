@@ -74,7 +74,7 @@ export default function ControlQualityDefectLayout() {
       TONALIDADE: data.tonality,
       ITENS: ITENS,
       FICHAPRODUTO: {
-        ID: data.product.value,
+        ID: data.product[0]?.value,
       },
       UNIDADE: {
         ID: filters?.unit?.value,
@@ -86,7 +86,6 @@ export default function ControlQualityDefectLayout() {
         ID: credential?.userid,
       },
     };
-    console.log(body);
     try {
       await api.post('v3/retifica/defeito', body);
       queryDefects.refetch();
@@ -165,7 +164,6 @@ export default function ControlQualityDefectLayout() {
 
     return setSelected(null);
   };
-
   return (
     <View style={{ flex: 1 }}>
       {queryDefects.data?.length == 0 ? (
@@ -176,7 +174,7 @@ export default function ControlQualityDefectLayout() {
           horizontal
           showsHorizontalScrollIndicator={false}
         >
-          <TouchableOpacity activeOpacity={0.9} style={{ zIndex: 0 }}>
+          <TouchableOpacity activeOpacity={1} style={{ zIndex: 0 }}>
             <View style={styles.header}>
               {title.map((value, index) => (
                 <Text key={index} style={styles.headerItem}>

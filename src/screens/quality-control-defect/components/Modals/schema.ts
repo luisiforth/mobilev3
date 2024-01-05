@@ -1,11 +1,13 @@
 import * as yup from 'yup';
 
 export const schema = yup.object({
-  product: yup.object().shape({
-    label: yup.string().required('O campo é obrigatório'),
-    value: yup.number().required('O campo é obrigatório'),
-  }),
   defect: yup.array().of(
+    yup.object().shape({
+      label: yup.string().required('O campo é obrigatório'),
+      value: yup.number().required('O campo é obrigatório'),
+    })
+  ),
+  product: yup.array().of(
     yup.object().shape({
       label: yup.string().required('O campo é obrigatório'),
       value: yup.number().required('O campo é obrigatório'),

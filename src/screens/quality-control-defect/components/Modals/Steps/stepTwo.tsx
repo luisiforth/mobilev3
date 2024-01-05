@@ -48,7 +48,7 @@ export const StepTwo = ({ methods, onRequired }: StepProps) => {
         style={{ height: UnistylesRuntime.screen.height * 0.65, zIndex: 100 }}
       >
         {methods.getValues('values')?.map((v: TDefects, index: number) => (
-          <TouchableWithoutFeedback style={{ flexWrap: 'wrap' }} key={index}>
+          <TouchableWithoutFeedback style={{ flex: 1 }} key={index}>
             <TextInput.Wrapper required label={v.label} />
             <InputTwoStep
               onRequired={onRequired}
