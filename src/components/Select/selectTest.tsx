@@ -20,6 +20,7 @@ type TMultiPicker = {
   value: any;
   isSearch: boolean;
   isLoading: boolean;
+  test: any;
   placeholder: string;
   onChange?: (value: any) => void | undefined;
   isMulti: boolean;
@@ -31,11 +32,20 @@ type TSelected = {
 };
 
 const MultiPicker = (props: TMultiPicker) => {
-  const { data, isSearch, isLoading, isMulti, value, placeholder, onChange } =
-    props;
+  const {
+    data,
+    test,
+    isSearch,
+    isLoading,
+    isMulti,
+    value,
+    placeholder,
+    onChange,
+  } = props;
+
   const [searchText, setSearchText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<TSelected[]>([]);
+  const [selectedItems, setSelectedItems] = useState<TSelected[]>(test || []);
 
   const { styles } = useStyles(stylesheet);
   const filteredItems = useMemo(() => {
@@ -65,7 +75,6 @@ const MultiPicker = (props: TMultiPicker) => {
       setSelectedItems([...selectedItems, item]);
     }
   };
-
   const handleSelect = useCallback(
     (item: TSelected) => {
       if (isMulti) return handleSelectMultiItem(item);
@@ -93,6 +102,10 @@ const MultiPicker = (props: TMultiPicker) => {
       setSelectedItems(value);
     }
   }, [value]);
+
+  useEffect(() => {
+    setSearchText('');
+  }, [isOpen]);
 
   useEffect(() => {
     if (onChange) onChange(selectedItems);

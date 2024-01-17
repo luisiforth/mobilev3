@@ -8,6 +8,7 @@ import React, {
 import { SubmitHandler } from 'react-hook-form';
 import {
   Alert,
+  FlatList,
   Pressable,
   ScrollView,
   TouchableOpacity,
@@ -58,16 +59,18 @@ export default function ControlQualityDefectLayout() {
     return console.log(Device.deviceType);
   }, []);
   const onSubmit: SubmitHandler<TSchema> = async (data) => {
-    const ITENS = data.values?.map((v) => ({
-      AMOSTRA: data.sample,
-      QUANTIDADE: {
-        C: v.c,
-        QUEBRA: v.q,
-      },
-      DEFEITO: {
-        ID: v.id,
-      },
-    }));
+    const ITENS = data.values
+      ?.map((v) => ({
+        AMOSTRA: data.sample,
+        QUANTIDADE: {
+          C: v.c,
+          QUEBRA: v.q,
+        },
+        DEFEITO: {
+          ID: v.id,
+        },
+      }))
+      .filter((item) => item.QUANTIDADE.C > 0 || item.QUANTIDADE.QUEBRA > 0);
 
     const body = {
       TOM: data.tone,
@@ -89,7 +92,7 @@ export default function ControlQualityDefectLayout() {
     try {
       await api.post('v3/retifica/defeito', body);
       queryDefects.refetch();
-      bottomSheetModalRef.current?.handleDismiss();
+      bottomSheetModalRef.current?.handleForceClose();
       Alert.alert('', 'Enviado com sucesso!');
     } catch (err: any | AxiosError) {
       console.log(err.response.data.message);
@@ -182,8 +185,8 @@ export default function ControlQualityDefectLayout() {
                 </Text>
               ))}
             </View>
-            <FlashList
-              estimatedItemSize={100}
+            <FlatList
+              // estimatedItemSize={100}
               data={queryDefects.data}
               renderItem={({ item, index }) => {
                 return (
@@ -245,8 +248,8 @@ export default function ControlQualityDefectLayout() {
         ref={bottomSheetModalRef}
       >
         <Pressable
-          hitSlop={20}
-          onPress={() => bottomSheetModalRef.current?.handleDismiss()}
+          hitSlop={30}
+          onPress={() => bottomSheetModalRef.current?.handleForceClose()}
         >
           <Feather
             name="x"

@@ -6,13 +6,11 @@ import { useQuery } from 'react-query';
 import { Select } from '@/components/Select';
 import SelectTest from '@/components/Select/selectTest';
 import { useOnRequired } from '@/hooks/useOnRequired';
-// import { item } from '@/screens/advanced-piece/utils/object_item';
 import {
   getAllDefects,
   getAllProducts,
 } from '@/screens/quality-control-defect/utils';
 import { useFilterStore } from '@/store/filterStore';
-// import AntDesign from '@expo/vector-icons/AntDesign';
 import { missingFilters } from 'util/functions/missingFilters';
 import { addLabelAndValue } from 'util/handle-options-props';
 
@@ -88,6 +86,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
         <SelectTest
           isSearch={true}
           isMulti={false}
+          test={methods.getValues('product') || []}
           value={selectedProducts}
           placeholder="Selecione ou pesquise um Produto"
           data={queryProducts.data || []}
@@ -95,10 +94,11 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
           isLoading={queryProducts.isLoading}
         />
       </Select.Wrapper>
-      <Select.Wrapper required label="Produto">
+      <Select.Wrapper required label="Defeito">
         <SelectTest
           isSearch={true}
           isMulti={true}
+          test={methods.getValues('defects') || []}
           value={selectedDefects}
           placeholder="Selecione ou pesquise um Defeito"
           data={queryDefects.data || []}
