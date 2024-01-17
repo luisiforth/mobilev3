@@ -6,7 +6,6 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react';
-import { Alert } from 'react-native';
 
 import {
   BottomSheetBackdrop,
@@ -17,6 +16,7 @@ import { useTheme } from 'styled-components/native';
 
 export type ComportModalProps = {
   handlePresentModalPress: () => void;
+  handleForceClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleRenderBackDrop: (props: any) => React.JSX.Element;
   handleClose: () => void;
@@ -54,6 +54,10 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
     bottomSheetModalRef.current?.dismiss();
   }, []);
 
+  const handleForceClose = useCallback(() => {
+    bottomSheetModalRef.current?.forceClose();
+  }, []);
+
   const handleClose = useCallback(() => {
     // console.log('AQUi ?')
     bottomSheetModalRef.current?.close;
@@ -63,6 +67,7 @@ const Modal: ForwardRefRenderFunction<ComportModalProps, ModalProps> = (
     return {
       handleClose,
       handleDismiss,
+      handleForceClose,
       handlePresentModalPress,
       handleRenderBackDrop,
     };

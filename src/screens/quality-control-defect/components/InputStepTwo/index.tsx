@@ -36,8 +36,8 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
     myRule() {
       const values = methods.getValues(`values`);
 
-      return values.every(
-        (value: { q: number; c: number }) => value.q > 0 || value.c > 0
+      return values.some(
+        (obj: { c: number; q: number }) => obj.c > 0 || obj.q > 0
       );
     },
   });
@@ -71,10 +71,10 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             style={styles.minus}
             activeOpacity={0.8}
             onPress={() =>
-              handleInputChangeC(methods.getValues(`values[${index}].c`), -10)
+              handleInputChangeC(methods.getValues(`values[${index}].c`), -5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>-10</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>-5</Text>
           </TouchableOpacity>
 
           <ControlledInput
@@ -88,10 +88,10 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             activeOpacity={0.8}
             style={styles.plus}
             onPress={() =>
-              handleInputChangeC(methods.getValues(`values[${index}].c`), 10)
+              handleInputChangeC(methods.getValues(`values[${index}].c`), 5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>10</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>5</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -119,10 +119,10 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             style={styles.minus}
             activeOpacity={0.8}
             onPress={() =>
-              handleInputChangeQ(methods.getValues(`values[${index}].q`), -10)
+              handleInputChangeQ(methods.getValues(`values[${index}].q`), -5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>-10</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>-5</Text>
           </TouchableOpacity>
 
           <ControlledInput
@@ -136,10 +136,10 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             style={styles.plus}
             activeOpacity={0.8}
             onPress={() =>
-              handleInputChangeQ(methods.getValues(`values[${index}].q`), 10)
+              handleInputChangeQ(methods.getValues(`values[${index}].q`), 5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>10</Text>
+            <Text style={{ color: 'white', fontSize: 18 }}>5</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.plus}
