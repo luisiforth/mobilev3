@@ -207,8 +207,8 @@ export default function ControlQualityDefectLayout() {
                     </Text>
                     <Text style={styles.cell}>{item.PRODUTO.REFERENCIA}</Text>
                     <Text style={styles.cell}>{item.DEFEITO.DESCRICAO}</Text>
-                    <Text style={styles.cell}>{item.QUANTIDADE.C}</Text>
                     <Text style={styles.cell}>{item.QUANTIDADE.QUEBRA}</Text>
+                    <Text style={styles.cell}>{item.QUANTIDADE.C}</Text>
                     <Text style={styles.cell}>{item.AMOSTRA}</Text>
                     <Text style={styles.cell}>{item.INDICE}</Text>
                     <Text style={styles.cell}>{item.TOM}</Text>
