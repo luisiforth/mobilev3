@@ -7,6 +7,7 @@ import {
   StorageDefectsProps,
   StorageEndPointProps,
   StorageFilterProps,
+  StorageQualityDefectProps,
   StorageTimeProps,
   StorageTokenProps,
 } from './types';
@@ -22,6 +23,19 @@ export const useFilterStore = create<StorageFilterProps>()(
     }),
     {
       name: 'filter-storage',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useQualityDefectsStore = create<StorageQualityDefectProps>()(
+  persist(
+    (set) => ({
+      defects: [],
+      setDefects: (defects) => set({ defects: defects }),
+    }),
+    {
+      name: 'defects-quality-storage-1',
       storage: createJSONStorage(() => zustandStorage),
     }
   )

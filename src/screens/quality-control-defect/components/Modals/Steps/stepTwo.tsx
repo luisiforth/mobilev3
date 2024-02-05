@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { View } from 'react-native';
+import { Text, View } from 'react-native';
 import {
   ScrollView,
   TouchableWithoutFeedback,
@@ -46,7 +46,9 @@ export const StepTwo = ({ methods, onRequired }: StepProps) => {
       >
         {methods.getValues('values')?.map((v: TDefects, index: number) => (
           <TouchableWithoutFeedback style={{ flex: 1 }} key={index}>
-            <TextInput.Wrapper required label={v.label} />
+            <Text style={{ fontSize: 24, fontWeight: '600' }}>
+              {v.label} <Text style={{ color: 'red' }}> *</Text>{' '}
+            </Text>
             <InputTwoStep
               onRequired={onRequired}
               methods={methods}

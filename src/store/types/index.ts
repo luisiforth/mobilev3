@@ -18,6 +18,11 @@ export interface StorageFilterProps {
   setFilter: (filter: FilterProps) => void;
 }
 
+export interface StorageQualityDefectProps {
+  defects: [];
+  setDefects: (defects: [{ label: string; value: number }]) => void;
+}
+
 export interface StorageCredentialsProps {
   credential: CredentialsrProps | null;
   setUser: (credential: CredentialsrProps) => void;

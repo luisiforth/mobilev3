@@ -1,13 +1,12 @@
 import { useCallback, memo } from 'react';
 import { Alert, View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { createStyleSheet, useStyles } from 'react-native-unistyles';
 
 import { ControlledInput } from '@/components/ControlledInput';
 import { TextInput } from '@/components/TextInput';
 import { useOnRequired } from '@/hooks/useOnRequired';
 import AntDesign from '@expo/vector-icons/AntDesign';
-
-import { styles } from '../Modals/styles';
 
 type TInput = {
   methods: any;
@@ -16,6 +15,7 @@ type TInput = {
 };
 
 export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
+  const { styles } = useStyles(stylesheet);
   const handleInputChangeC = useCallback((value: number, sum: number) => {
     const number = Number(value) + sum;
     if (number < 0)
@@ -56,7 +56,8 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
         padding: 10,
       }}
     >
-      <TextInput.Wrapper label="C">
+      <View style={styles.wrapper}>
+        <Text style={styles.subtitle}>C</Text>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity
             style={styles.minus}
@@ -74,7 +75,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
               handleInputChangeC(methods.getValues(`values[${index}].c`), -5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>-5</Text>
+            <Text style={styles.textButton}>-5</Text>
           </TouchableOpacity>
 
           <ControlledInput
@@ -82,7 +83,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             name={`values[${index}].c`}
             defaultValue="0"
             keyboardType="numeric"
-            style={{ width: 80, textAlign: 'center' }}
+            style={styles.input}
           />
           <TouchableOpacity
             activeOpacity={0.8}
@@ -91,7 +92,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
               handleInputChangeC(methods.getValues(`values[${index}].c`), 5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>5</Text>
+            <Text style={styles.textButton}>5</Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.8}
@@ -103,8 +104,9 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             <AntDesign name="plus" color={'white'} size={20} />
           </TouchableOpacity>
         </View>
-      </TextInput.Wrapper>
-      <TextInput.Wrapper label="Quebra">
+      </View>
+      <View style={styles.wrapper}>
+        <Text style={styles.subtitle}>Quebra</Text>
         <View style={{ flexDirection: 'row', gap: 10 }}>
           <TouchableOpacity
             style={styles.minus}
@@ -122,7 +124,9 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
               handleInputChangeQ(methods.getValues(`values[${index}].q`), -5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>-5</Text>
+            <Text style={{ color: 'white', fontSize: 25, fontWeight: '400' }}>
+              -5
+            </Text>
           </TouchableOpacity>
 
           <ControlledInput
@@ -130,7 +134,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             name={`values[${index}].q`}
             keyboardType="numeric"
             defaultValue="0"
-            style={{ width: 80, textAlign: 'center' }}
+            style={styles.input}
           />
           <TouchableOpacity
             style={styles.plus}
@@ -139,7 +143,7 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
               handleInputChangeQ(methods.getValues(`values[${index}].q`), 5)
             }
           >
-            <Text style={{ color: 'white', fontSize: 18 }}>5</Text>
+            <Text style={styles.textButton}>5</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.plus}
@@ -151,9 +155,51 @@ export const InputTwoStep = ({ methods, onRequired, index }: TInput) => {
             <AntDesign name="plus" color={'white'} size={20} />
           </TouchableOpacity>
         </View>
-      </TextInput.Wrapper>
+      </View>
     </View>
   );
 };
+
+const stylesheet = createStyleSheet((theme) => ({
+  textButton: {
+    color: 'white',
+    fontSize: 25,
+    fontWeight: '400',
+  },
+  input: {
+    width: 60,
+    fontSize: 24,
+    fontWeight: '400',
+    textAlign: 'center',
+  },
+  wrapper: {
+    position: 'relative',
+  },
+  subtitle: {
+    color: 'black',
+    fontWeight: '400',
+    fontSize: 24,
+    paddingBottom: 6,
+  },
+  icon: {
+    marginRight: 15,
+  },
+  minus: {
+    alignItems: 'center',
+    backgroundColor: 'red',
+    borderRadius: 6,
+    height: 60,
+    justifyContent: 'center',
+    width: 60,
+  },
+  plus: {
+    alignItems: 'center',
+    backgroundColor: 'green',
+    borderRadius: 6,
+    height: 60,
+    justifyContent: 'center',
+    width: 60,
+  },
+}));
 
 export default memo(InputTwoStep);

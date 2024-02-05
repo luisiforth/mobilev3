@@ -10,7 +10,7 @@ import {
   getAllDefects,
   getAllProducts,
 } from '@/screens/quality-control-defect/utils';
-import { useFilterStore } from '@/store/filterStore';
+import { useFilterStore, useQualityDefectsStore } from '@/store/filterStore';
 import { missingFilters } from 'util/functions/missingFilters';
 import { addLabelAndValue } from 'util/handle-options-props';
 
@@ -21,13 +21,14 @@ interface StepProps {
 
 export const StepOne = ({ methods, onRequired }: StepProps) => {
   const [selectedDefects, setSelectedDefects] = useState([]);
+  const { defects, setDefects } = useQualityDefectsStore();
   const [selectedProducts, setSelectedProducts] = useState([]);
   const handleSelectedItemsChange = useCallback(
     (newSelectedItems: any) => {
       setSelectedDefects(newSelectedItems);
       methods.setValue('defects', newSelectedItems);
-
       const values = methods.getValues('values');
+      setDefects(methods.getValues('defects') || defects);
       const result = newSelectedItems?.map(
         (v: { ID: number; DESCRICAO: string }) => ({
           c: values.find((val: { id: number }) => val?.id == v.ID)?.c || 0,
@@ -80,6 +81,9 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
       : [];
     return optionProd;
   });
+
+  // console.log(methods.getValues('defects'));
+  // console.log({ defects });
   return (
     <View style={{ gap: 10 }}>
       <Select.Wrapper required label="Produto">
@@ -99,7 +103,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
           isSearch={true}
           isMulti={true}
           test={methods.getValues('defects') || []}
-          value={selectedDefects}
+          value={selectedDefects || defects}
           placeholder="Selecione ou pesquise um Defeito"
           data={queryDefects.data || []}
           onChange={handleSelectedItemsChange}
