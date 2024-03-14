@@ -8,6 +8,7 @@ import {
   StorageEndPointProps,
   StorageFilterProps,
   StorageQualityDefectProps,
+  StorageRetificProps,
   StorageTimeProps,
   StorageTokenProps,
 } from './types';
@@ -29,6 +30,19 @@ export const useFilterStore = create<StorageFilterProps>()(
 );
 
 export const useQualityDefectsStore = create<StorageQualityDefectProps>()(
+  persist(
+    (set) => ({
+      defects: [],
+      setDefects: (defects) => set({ defects: defects }),
+    }),
+    {
+      name: 'defects-quality-storage-1',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useStore = create<StorageQualityDefectProps>()(
   persist(
     (set) => ({
       defects: [],
@@ -109,6 +123,19 @@ export const useEndPointStore = create<StorageEndPointProps>()(
     }),
     {
       name: 'endpoint-storage',
+      storage: createJSONStorage(() => zustandStorage),
+    }
+  )
+);
+
+export const useRetificStore = create<StorageRetificProps>()(
+  persist(
+    (set) => ({
+      retific: false,
+      setRetific: (retific) => set({ retific: retific }),
+    }),
+    {
+      name: 'retific-storage',
       storage: createJSONStorage(() => zustandStorage),
     }
   )

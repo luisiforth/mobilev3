@@ -51,25 +51,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const request = await api.get(getToken(), {
         headers: { iforthsistemas: `iforth ${login_encoded}` },
       });
-
-      updateToken(request.data.TOKEN);
-      setTime(request.data.EXPIRATION);
-      setToken(request.data.TOKEN);
+      console.log(request.data);
+      updateToken(request.data.SESSAO.TOKEN);
+      setToken(request.data.SESSAO.TOKEN);
 
       const data = {
-        userid: request.data.IDUSU,
-        username: request.data.NOMEUSU,
+        userid: request.data.ID,
+        username: request.data.NOME,
       };
 
       setUser(data);
       return;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        return Alert.alert('', `Usuário ou senha inválidos!`);
+        return Alert.alert('', `Usuário ou senha inválidos!2`);
       }
 
       Alert.alert('', `Usuário ou senha inválidos!`);
-
+      console.log(error);
       throw error;
     }
   }

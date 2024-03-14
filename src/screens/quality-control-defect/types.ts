@@ -27,6 +27,7 @@ export type TItem = {
     ID: number;
     NOME: string;
   };
+  TIPO: { DESCRICAO: string; ID: number };
 };
 
 export type TSelect = {

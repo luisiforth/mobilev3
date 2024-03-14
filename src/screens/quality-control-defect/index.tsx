@@ -24,7 +24,11 @@ import Loading from '@/components/Loading';
 import Modal, { ComportModalProps } from '@/components/Modal';
 import StepModal from '@/components/StepModal';
 import { COLORS } from '@/constants';
-import { useCredentialStore, useFilterStore } from '@/store/filterStore';
+import {
+  useCredentialStore,
+  useFilterStore,
+  useRetificStore,
+} from '@/store/filterStore';
 import Feather from '@expo/vector-icons/Feather';
 import { FlashList } from '@shopify/flash-list';
 import { AxiosError } from 'axios';
@@ -42,6 +46,7 @@ import { getDefectRectify } from './utils';
 type TSchema = yup.InferType<typeof schema>;
 
 export default function ControlQualityDefectLayout() {
+  const { retific } = useRetificStore();
   const { styles } = useStyles(stylesheet);
   const [selected, setSelected] = useState<TItem | null>(null);
   const { credential } = useCredentialStore();
@@ -73,6 +78,7 @@ export default function ControlQualityDefectLayout() {
       .filter((item) => item.QUANTIDADE.C > 0 || item.QUANTIDADE.QUEBRA > 0);
 
     const body = {
+      RETIFICA: retific,
       TOM: data.tone,
       TONALIDADE: data.tonality,
       ITENS: ITENS,
@@ -89,6 +95,7 @@ export default function ControlQualityDefectLayout() {
         ID: credential?.userid,
       },
     };
+    console.log({ body });
     try {
       await api.post('v3/retifica/defeito', body);
       queryDefects.refetch();
@@ -154,7 +161,9 @@ export default function ControlQualityDefectLayout() {
       {
         onPress: async () => {
           try {
-            await api.put(`v3/retifica/defeito/${selected?.ID}`);
+            await api.put(
+              `v3/retifica/defeito/${selected?.ID}/${selected?.TIPO.ID}`
+            );
             queryDefects.refetch();
             Alert.alert('', 'Registro cancelado com sucesso');
           } catch (err: any | AxiosError) {
@@ -167,6 +176,8 @@ export default function ControlQualityDefectLayout() {
 
     return setSelected(null);
   };
+
+  console.log(selected);
   return (
     <View style={{ flex: 1 }}>
       {queryDefects.data?.length == 0 ? (
