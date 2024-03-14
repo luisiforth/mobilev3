@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { View } from 'react-native';
+import { Switch, Text, View } from 'react-native';
 import { useQuery } from 'react-query';
 
 import { Select } from '@/components/Select';
 import SelectTest from '@/components/Select/selectTest';
+import { TextInput } from '@/components/TextInput';
 import { useOnRequired } from '@/hooks/useOnRequired';
 import {
   getAllDefects,
@@ -23,6 +24,7 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
   const [selectedDefects, setSelectedDefects] = useState([]);
   const { defects, setDefects } = useQualityDefectsStore();
   const [selectedProducts, setSelectedProducts] = useState([]);
+
   const handleSelectedItemsChange = useCallback(
     (newSelectedItems: any) => {
       setSelectedDefects(newSelectedItems);
@@ -82,10 +84,8 @@ export const StepOne = ({ methods, onRequired }: StepProps) => {
     return optionProd;
   });
 
-  // console.log(methods.getValues('defects'));
-  // console.log({ defects });
   return (
-    <View style={{ gap: 10 }}>
+    <View style={{ gap: 15 }}>
       <Select.Wrapper required label="Produto">
         <SelectTest
           isSearch={true}

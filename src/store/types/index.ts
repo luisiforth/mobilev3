@@ -55,3 +55,8 @@ export interface StorageEndPointProps {
   // setDeleteToken: () => void;
   setEndPoint: (endpoint: string) => void;
 }
+export interface StorageRetificProps {
+  retific: boolean;
+  // setDeleteToken: () => void;
+  setRetific: (retific: boolean) => void;
+}

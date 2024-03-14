@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, Text, Switch } from 'react-native';
 
 import Button from '@/components/Button';
 import { Select } from '@/components/Select';
 import { TextInput } from '@/components/TextInput';
-import { useEndPointStore } from '@/store/filterStore';
+import { useEndPointStore, useRetificStore } from '@/store/filterStore';
 import { Picker } from '@react-native-picker/picker';
 import { format } from 'date-fns';
 import { api } from 'util/axios/axios';
@@ -16,11 +16,15 @@ export default function ConfigPageLayout() {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const [value, setValue] = useState('');
-
+  const toggleSwitch = (e) => {
+    setIsEnabled((previousState) => !previousState);
+  };
   const { setEndPoint, endpoint } = useEndPointStore();
-
+  const { setRetific, retific } = useRetificStore();
+  const [isEnabled, setIsEnabled] = useState(false || retific);
   const handleEnv = (value: string) => {
     setEndPoint(value);
+    setRetific(isEnabled);
     api.defaults.baseURL = value;
 
     Alert.alert('', 'Endpoint informado com sucesso');
@@ -35,7 +39,7 @@ export default function ConfigPageLayout() {
     }
   };
 
-  const toggle = () => {
+  const toggle = (e) => {
     setIsVisiblePassword((prev) => !prev);
   };
 
@@ -53,7 +57,7 @@ export default function ConfigPageLayout() {
       value: process.env.EXPO_PUBLIC_INTERNALTEST_DEXCO_API_URL,
     },
   ];
-
+  console.log(retific);
   return (
     <>
       {/* @ts-ignore */}
@@ -99,6 +103,18 @@ export default function ConfigPageLayout() {
                 ))}
               </Picker>
             </Select.Wrapper>
+            <TextInput.Wrapper required label="É Retifica ?">
+              <Text
+                style={{ fontWeight: '600', fontSize: 20, marginRight: 10 }}
+              >
+                {isEnabled ? 'Sim' : 'Não'}
+              </Text>
+              <Switch
+                style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+                value={isEnabled}
+                onValueChange={toggleSwitch}
+              />
+            </TextInput.Wrapper>
             <View
               style={{
                 flexDirection: 'row',
