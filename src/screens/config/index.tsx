@@ -1,5 +1,12 @@
 import { useState } from 'react';
-import { View, Alert, Text, Switch } from 'react-native';
+import {
+  View,
+  Alert,
+  Text,
+  Switch,
+  Button as ButtonNative,
+} from 'react-native';
+import { useQuery } from 'react-query';
 
 import Button from '@/components/Button';
 import { Select } from '@/components/Select';
@@ -16,13 +23,27 @@ export default function ConfigPageLayout() {
   const [isVisible, setIsVisible] = useState(false);
   const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const [value, setValue] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
   const toggleSwitch = (e) => {
     setIsEnabled((previousState) => !previousState);
   };
   const { setEndPoint, endpoint } = useEndPointStore();
   const { setRetific, retific } = useRetificStore();
   const [isEnabled, setIsEnabled] = useState(false || retific);
+  async function fetchData() {
+    if (!endpoint) return Alert.alert('', 'Por favor, selecione uma rota.');
+    try {
+      const response = await api.get('/v1/cr8/check');
+      console.log(response.data);
+      return Alert.alert('', 'Rota com acesso.');
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  // console.log(fetchData());
+
   const handleEnv = (value: string) => {
+    setIsChecked(true);
     setEndPoint(value);
     setRetific(isEnabled);
     api.defaults.baseURL = value;
@@ -57,10 +78,9 @@ export default function ConfigPageLayout() {
       value: process.env.EXPO_PUBLIC_INTERNALTEST_DEXCO_API_URL,
     },
   ];
-  console.log(retific);
+
   return (
     <>
-      {/* @ts-ignore */}
       <S.Root.Wrapper insets={{ top: 60 }}>
         {!isVisible ? (
           <>
@@ -91,7 +111,9 @@ export default function ConfigPageLayout() {
             <Select.Wrapper required label="Informe a base a ser utilizada">
               <Picker
                 selectedValue={value || endpoint}
-                onValueChange={setValue}
+                onValueChange={(itemValue) => {
+                  setValue(itemValue), setIsChecked(false);
+                }}
               >
                 <Picker.Item label={'Selecione'} enabled={true} />
                 {ENVs.map((v, key) => (
@@ -117,10 +139,18 @@ export default function ConfigPageLayout() {
             </TextInput.Wrapper>
             <View
               style={{
-                flexDirection: 'row',
+                flexDirection: 'column',
+                gap: 10,
+                height: 100,
               }}
             >
               <Button text="Adicionar" onPress={() => handleEnv(value)} />
+              <Button
+                disabled={!isChecked}
+                style={{ backgroundColor: 'blue' }}
+                text="Teste a rota"
+                onPress={() => fetchData()}
+              />
             </View>
           </View>
         )}

@@ -63,12 +63,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setUser(data);
       return;
     } catch (error) {
+      console.log(error);
       if (axios.isAxiosError(error)) {
         return Alert.alert('', `Usuário ou senha inválidos!2`);
       }
 
       Alert.alert('', `Usuário ou senha inválidos!`);
-      console.log(error);
       throw error;
     }
   }
